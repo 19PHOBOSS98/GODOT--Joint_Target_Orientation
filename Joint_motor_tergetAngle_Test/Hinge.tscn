@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://PIDJoint.gd" type="Script" id=1]
+
+[sub_resource type="BoxShape" id=3]
+
+[sub_resource type="CubeMesh" id=4]
+
+[sub_resource type="BoxShape" id=5]
+extents = Vector3( 1, 10, 8 )
+
+[sub_resource type="CubeMesh" id=6]
+size = Vector3( 2, 20, 16 )
+
+[node name="Spatial2" type="Spatial"]
+
+[node name="StaticBody" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.3681, -5 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+shape = SubResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="StaticBody"]
+
+[node name="RigidBody" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -5 )
+mass = 50.0
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody/CollisionShape"]
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="HingeJoint" type="HingeJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -5 )
+nodes/node_a = NodePath("../StaticBody")
+nodes/node_b = NodePath("../RigidBody")
+angular_limit/bias = 0.56
+script = ExtResource( 1 )
+stiffnessA = 10.0
+stiffnessB = 5000.0
+dampingA = 10.0
+dampingB = 30.0
+rest_angle = -90.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HingeJoint"]
+margin_right = 319.0
+margin_bottom = 75.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

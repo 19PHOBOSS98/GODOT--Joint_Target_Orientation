@@ -6,10 +6,10 @@ Don't Forget to use Bullet Physics or something better
 and set Physics step to 240
 """
 
-export(float) var stiffnessA = 1.0
-export(float) var stiffnessB = 1.0
-export(float) var dampingA = 1.0
-export(float) var dampingB = 1.0
+export(float) var stiffnessA = 500.0
+export(float) var stiffnessB = 50.0
+export(float) var dampingA = 30.0
+export(float) var dampingB = 30.0
 #export(float,-360.0,360.0) var rest_angle = 0.0
 export(float,-360.0,360.0) var rest_angle_x = 0.0
 export(float,-360.0,360.0) var rest_angle_y = 0.0
@@ -23,6 +23,7 @@ var dampA
 var dampB
 
 var baseBTOrig
+export(NodePath) var baseBTOrigPath
 var damp
 
 func _ready():
@@ -58,7 +59,8 @@ func _ready():
 	prints(dampB)
 	
 	#baseBTOrig = body_b.global_transform.basis
-	baseBTOrig = body_a.get_node("Position3D")
+	#baseBTOrig = body_a.get_node("Position3D")
+	baseBTOrig = body_a.get_node(baseBTOrigPath)
 	baseBTOrig.global_transform.basis = body_b.global_transform.basis
 	
 

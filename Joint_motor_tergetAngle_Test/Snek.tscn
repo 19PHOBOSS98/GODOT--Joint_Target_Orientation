@@ -1,0 +1,227 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://PIDJoint.gd" type="Script" id=1]
+[ext_resource path="res://V3PID.gd" type="Script" id=2]
+
+[sub_resource type="BoxShape" id=9]
+
+[sub_resource type="CubeMesh" id=10]
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 10, 1, 8 )
+
+[sub_resource type="CubeMesh" id=12]
+size = Vector3( 20, 2, 16 )
+
+[sub_resource type="CylinderMesh" id=13]
+
+[node name="Snek" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 20, 0 )
+
+[node name="StaticBody2" type="RigidBody" parent="."]
+gravity_scale = 0.0
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody2"]
+shape = SubResource( 9 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody2"]
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="StaticBody2"]
+
+[node name="RigidBody3" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -5, 0 )
+mass = 1000.0
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody3"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody3/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody3"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../PIDJoint")
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="RigidBody3"]
+
+[node name="PIDJoint" type="HingeJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0 )
+nodes/node_a = NodePath("../StaticBody2")
+nodes/node_b = NodePath("../RigidBody3")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = 10.0
+stiffnessB = 10.0
+dampingA = 10.0
+dampingB = 10.0
+rest_angle = 45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="PIDJoint"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="PIDJoint"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AngularVelocityPID" type="Node" parent="PIDJoint"]
+script = ExtResource( 2 )
+
+[node name="Vector3_PID" type="Node" parent="PIDJoint"]
+script = ExtResource( 2 )
+
+[node name="RigidBody4" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 45, -5, 0 )
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody4"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody4/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody4"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../PIDJoint")
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="RigidBody4"]
+
+[node name="PIDJoint2" type="HingeJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, -5, 0 )
+nodes/node_a = NodePath("../RigidBody3")
+nodes/node_b = NodePath("../RigidBody4")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = 10.0
+stiffnessB = 50.0
+dampingA = 10.0
+dampingB = 20.0
+rest_angle = 45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint2"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="PIDJoint2"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="PIDJoint2"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AngularVelocityPID" type="Node" parent="PIDJoint2"]
+script = ExtResource( 2 )
+
+[node name="Vector3_PID" type="Node" parent="PIDJoint2"]
+script = ExtResource( 2 )
+
+[node name="RigidBody5" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 75, -5, 0 )
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody5"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody5/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody5"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("../../PIDJoint")
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="RigidBody5"]
+
+[node name="PIDJoint3" type="HingeJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 60, -5, 0 )
+nodes/node_a = NodePath("../RigidBody4")
+nodes/node_b = NodePath("../RigidBody5")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = 10.0
+stiffnessB = 50.0
+dampingA = 10.0
+dampingB = 20.0
+rest_angle = -90.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint3"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="PIDJoint3"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="PIDJoint3"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AngularVelocityPID" type="Node" parent="PIDJoint3"]
+script = ExtResource( 2 )
+
+[node name="Vector3_PID" type="Node" parent="PIDJoint3"]
+script = ExtResource( 2 )

@@ -1,38 +1,7 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=19 format=2]
 
-[ext_resource path="res://Vira.tscn" type="PackedScene" id=1]
-[ext_resource path="res://PIDJoint6DOF.gd" type="Script" id=2]
-[ext_resource path="res://Tank.tscn" type="PackedScene" id=3]
-[ext_resource path="res://V3PID.gd" type="Script" id=5]
-[ext_resource path="res://Step_curve.tres" type="Curve" id=6]
-[ext_resource path="res://V9_HOVER_MODULE.tres" type="Curve" id=7]
-
-[sub_resource type="CapsuleMesh" id=16]
-radius = 0.5
-mid_height = 10.0
-
-[sub_resource type="BoxShape" id=7]
-extents = Vector3( 4, 4, 4 )
-
-[sub_resource type="SpatialMaterial" id=45]
-albedo_color = Color( 0.545098, 0.0392157, 0.890196, 1 )
-
-[sub_resource type="CubeMesh" id=8]
-material = SubResource( 45 )
-size = Vector3( 8, 8, 8 )
-
-[sub_resource type="SpatialMaterial" id=46]
-albedo_color = Color( 0.964706, 0.443137, 0.027451, 1 )
-
-[sub_resource type="CubeMesh" id=47]
-material = SubResource( 46 )
-size = Vector3( 8, 8, 8 )
-
-[sub_resource type="BoxShape" id=2]
-extents = Vector3( 1000, 1, 1000 )
-
-[sub_resource type="CubeMesh" id=1]
-size = Vector3( 2000, 2, 2000 )
+[ext_resource path="res://Step_curve.tres" type="Curve" id=1]
+[ext_resource path="res://V9_HOVER_MODULE.tres" type="Curve" id=2]
 
 [sub_resource type="GDScript" id=26]
 script/source = "tool
@@ -326,133 +295,58 @@ size = Vector3( 1, 25, 1 )
 [sub_resource type="SpatialMaterial" id=40]
 albedo_color = Color( 0, 0.882353, 1, 1 )
 
-[sub_resource type="BoxShape" id=20]
-extents = Vector3( 0.5, 2, 0.5 )
-
-[sub_resource type="CubeMesh" id=21]
-size = Vector3( 1, 4, 1 )
-
-[sub_resource type="SpatialMaterial" id=44]
-albedo_color = Color( 0.909804, 0.545098, 0.0235294, 1 )
-
-[sub_resource type="CubeMesh" id=43]
-material = SubResource( 44 )
-size = Vector3( 4, 4, 4 )
-
-[sub_resource type="BoxShape" id=23]
-extents = Vector3( 0.5, 4, 0.5 )
-
-[sub_resource type="CubeMesh" id=24]
-size = Vector3( 1, 8, 1 )
-
-[sub_resource type="BoxShape" id=41]
-extents = Vector3( 0.5, 10, 0.5 )
-
-[sub_resource type="CubeMesh" id=42]
-size = Vector3( 1, 20, 1 )
-
-[node name="Spatial" type="Spatial"]
-
-[node name="Position3D" type="Position3D" parent="."]
-transform = Transform( -1, -6.18172e-08, -6.18172e-08, 0, 0.707107, -0.707107, 8.74228e-08, -0.707107, -0.707107, 0, 19.965, 45.4777 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Position3D"]
-mesh = SubResource( 16 )
-material/0 = null
-
-[node name="RigidBody2" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -74.4959, 99.2503, 25.0714 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody2"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody2/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody7" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -50.4959, 99.2503, 66.0714 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody7"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody7/CollisionShape"]
-mesh = SubResource( 47 )
-material/0 = null
-
-[node name="Vira" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -35.8684, 48.0536, 104.305 )
-
-[node name="Floor" type="StaticBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30.0254, 0 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Floor"]
-shape = SubResource( 2 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Floor"]
-mesh = SubResource( 1 )
-material/0 = null
-
-[node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 0.791234, 0.449316, -0.414806, 0, 0.678326, 0.734761, 0.611513, -0.581368, 0.536715, -123.682, 7.26655, -99.2583 )
-
-[node name="V11_HOVER_MODULE" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 39, -17, 0 )
+[node name="V11_HOVER_MODULE" type="RigidBody"]
 script = SubResource( 26 )
 
-[node name="RayCast" type="RayCast" parent="V11_HOVER_MODULE"]
+[node name="RayCast" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, -30, 0 )
 script = SubResource( 27 )
 
-[node name="Position3D" type="Position3D" parent="V11_HOVER_MODULE/RayCast"]
+[node name="Position3D" type="Position3D" parent="RayCast"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/RayCast/Position3D" groups=["debug_mesh", "not_include_aabb"]]
+[node name="MeshInstance" type="MeshInstance" parent="RayCast/Position3D" groups=["debug_mesh", "not_include_aabb"]]
 mesh = SubResource( 28 )
 material/0 = SubResource( 29 )
 
-[node name="Generic6DOFJoint" type="HingeJoint" parent="V11_HOVER_MODULE"]
+[node name="Generic6DOFJoint" type="HingeJoint" parent="."]
 params/bias = 0.99
 angular_limit/enable = true
 angular_limit/upper = 0.0
 angular_limit/lower = 0.0
 angular_limit/bias = 0.99
 
-[node name="CollisionShape" type="CollisionShape" parent="V11_HOVER_MODULE"]
+[node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 30 )
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/CollisionShape"]
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape"]
 mesh = SubResource( 31 )
 material/0 = SubResource( 32 )
 
-[node name="CollisionShape2" type="CollisionShape" parent="V11_HOVER_MODULE"]
+[node name="CollisionShape2" type="CollisionShape" parent="."]
 shape = SubResource( 33 )
 
-[node name="Step" type="Position3D" parent="V11_HOVER_MODULE"]
+[node name="Step" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -15, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/Step" groups=["debug_mesh", "not_include_aabb"]]
+[node name="MeshInstance" type="MeshInstance" parent="Step" groups=["debug_mesh", "not_include_aabb"]]
 mesh = SubResource( 34 )
 material/0 = null
 
-[node name="LEG" type="Spatial" parent="V11_HOVER_MODULE"]
+[node name="LEG" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0 )
 
-[node name="Step_pointer" type="RayCast" parent="V11_HOVER_MODULE/LEG"]
+[node name="Step_pointer" type="RayCast" parent="LEG"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -13 )
 enabled = true
 cast_to = Vector3( 0, -30, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Step_pointer" groups=["debug_mesh", "not_include_aabb"]]
+[node name="MeshInstance" type="MeshInstance" parent="LEG/Step_pointer" groups=["debug_mesh", "not_include_aabb"]]
 mesh = SubResource( 35 )
 material/0 = null
 
-[node name="Skeleton" type="Skeleton" parent="V11_HOVER_MODULE/LEG"]
+[node name="Skeleton" type="Skeleton" parent="LEG"]
 bones/0/name = "bone"
 bones/0/parent = -1
 bones/0/rest = Transform( 0, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0 )
@@ -462,19 +356,19 @@ bones/1/name = "bone_1"
 bones/1/parent = 0
 bones/1/rest = Transform( 1, 3.76337e-08, -2.22349e-08, 0, -0.508675, -0.860959, -4.37114e-08, 0.860959, -0.508675, 0, 4, 0 )
 bones/1/enabled = true
-bones/1/bound_children = [ NodePath("BoneAttachment2") ]
+bones/1/bound_children = [  ]
 bones/2/name = "bone_2"
 bones/2/parent = 1
 bones/2/rest = Transform( 1, -3.88578e-16, -2.98023e-08, -1.78756e-09, 0.9982, -0.0599806, 2.97487e-08, 0.0599806, 0.998199, 1.72054e-22, 7.96121, -4.84288e-08 )
 bones/2/enabled = true
-bones/2/bound_children = [ NodePath("BoneAttachment3") ]
+bones/2/bound_children = [  ]
 bones/3/name = "bone_3"
 bones/3/parent = 2
 bones/3/rest = Transform( 1, -1.66714e-08, 2.47031e-08, -1.77636e-15, 0.828898, 0.5594, -2.98023e-08, -0.5594, 0.828898, 6.96376e-15, 15.828, 2.38419e-07 )
 bones/3/enabled = true
 bones/3/bound_children = [  ]
 
-[node name="SkeletonIK" type="SkeletonIK" parent="V11_HOVER_MODULE/LEG/Skeleton"]
+[node name="SkeletonIK" type="SkeletonIK" parent="LEG/Skeleton"]
 process_priority = 1
 root_bone = "bone_1"
 tip_bone = "bone_3"
@@ -487,182 +381,34 @@ have to peel back IK targets global_transform to local and back again
 
 not so efficient as dipping the IK interpolation parameter tho (Stride2())"
 }
-ik_int_curve = ExtResource( 6 )
-step_curve = ExtResource( 7 )
+ik_int_curve = ExtResource( 1 )
+step_curve = ExtResource( 2 )
 
-[node name="Tween" type="Tween" parent="V11_HOVER_MODULE/LEG/Skeleton/SkeletonIK"]
+[node name="Tween" type="Tween" parent="LEG/Skeleton/SkeletonIK"]
 
-[node name="BoneAttachment" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
+[node name="BoneAttachment" type="BoneAttachment" parent="LEG/Skeleton"]
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment" groups=["leg_mesh"]]
+[node name="MeshInstance" type="MeshInstance" parent="LEG/Skeleton/BoneAttachment" groups=["leg_mesh"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
 mesh = SubResource( 37 )
 material/0 = null
 
-[node name="BoneAttachment2" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
+[node name="BoneAttachment2" type="BoneAttachment" parent="LEG/Skeleton"]
 transform = Transform( 4.37114e-08, -0.860959, 0.508675, 0, 0.508675, 0.860959, -1, -3.76337e-08, 2.22349e-08, 0, -4, 0 )
 bone_name = "bone_1"
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2" groups=["leg_mesh"]]
+[node name="MeshInstance" type="MeshInstance" parent="LEG/Skeleton/BoneAttachment2" groups=["leg_mesh"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
 mesh = SubResource( 38 )
 material/0 = SubResource( 14 )
 
-[node name="BoneAttachment3" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
+[node name="BoneAttachment3" type="BoneAttachment" parent="LEG/Skeleton"]
 transform = Transform( 6.03828e-08, -0.828899, 0.5594, 2.47031e-08, 0.5594, 0.828898, -1, -3.62323e-08, 5.42544e-08, -6.85428, 0.0496683, -2.9961e-07 )
 bone_name = "bone_2"
 
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment3" groups=["leg_mesh"]]
+[node name="MeshInstance" type="MeshInstance" parent="LEG/Skeleton/BoneAttachment3" groups=["leg_mesh"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 mesh = SubResource( 39 )
 material/0 = SubResource( 40 )
 
-[node name="interp" type="Tween" parent="V11_HOVER_MODULE"]
-
-[node name="Tank" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -86, 19, 32 )
-
-[node name="Physics_Leg" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 32 )
-
-[node name="A" type="StaticBody" parent="Physics_Leg"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17, 0 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/A"]
-shape = SubResource( 20 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/A/CollisionShape"]
-mesh = SubResource( 21 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/A"]
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/A"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 0 )
-mesh = SubResource( 43 )
-material/0 = null
-
-[node name="PIDJoint6DOF" type="Generic6DOFJoint" parent="Physics_Leg"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0 )
-nodes/node_a = NodePath("../A")
-nodes/node_b = NodePath("../B")
-collision/exclude_nodes = false
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
-script = ExtResource( 2 )
-stiffnessB = 500.0
-dampingB = 30.0
-target_node_orientation_b = NodePath("../../V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2/MeshInstance")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = -1.0
-margin_top = 106.0
-margin_right = 523.0
-margin_bottom = 181.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = 2.0
-margin_top = 187.0
-margin_right = 561.0
-margin_bottom = 262.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = -1.0
-margin_top = 163.0
-margin_right = 556.0
-margin_bottom = 238.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AngularVelocityPID" type="Node" parent="Physics_Leg/PIDJoint6DOF"]
-script = ExtResource( 5 )
-
-[node name="Vector3_PID" type="Node" parent="Physics_Leg/PIDJoint6DOF"]
-script = ExtResource( 5 )
-
-[node name="B" type="RigidBody" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, 0, 0.508681, 0.860955, -1, 3.76335e-08, -2.22351e-08, -3, 15, 0 )
-mass = 500.0
-gravity_scale = 0.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/B"]
-shape = SubResource( 23 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/B/CollisionShape"]
-mesh = SubResource( 24 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/B"]
-
-[node name="PIDJoint6DOF2" type="Generic6DOFJoint" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, 0, 0.508681, 0.860955, -1, 3.76335e-08, -2.22351e-08, -7.30478, 17.5434, 0 )
-nodes/node_a = NodePath("../B")
-nodes/node_b = NodePath("../B2")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
-script = ExtResource( 2 )
-stiffnessB = 50.0
-dampingB = 30.0
-target_node_orientation_b = NodePath("../../V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2/MeshInstance")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = -1.0
-margin_top = 106.0
-margin_right = 523.0
-margin_bottom = 181.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = 2.0
-margin_top = 187.0
-margin_right = 561.0
-margin_bottom = 262.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = -1.0
-margin_top = 163.0
-margin_right = 556.0
-margin_bottom = 238.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AngularVelocityPID" type="Node" parent="Physics_Leg/PIDJoint6DOF2"]
-script = ExtResource( 5 )
-
-[node name="Vector3_PID" type="Node" parent="Physics_Leg/PIDJoint6DOF2"]
-script = ExtResource( 5 )
-
-[node name="B2" type="RigidBody" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, -2.08503e-15, 0.508681, 0.860955, -1, 3.76336e-08, -2.22351e-08, -15.9143, 22.6302, 0 )
-mass = 500.0
-gravity_scale = 0.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/B2"]
-shape = SubResource( 41 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/B2/CollisionShape"]
-transform = Transform( 1, 0, 0, -7.10543e-15, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, 0, 0 )
-mesh = SubResource( 42 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/B2"]
+[node name="interp" type="Tween" parent="."]
