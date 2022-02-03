@@ -1,0 +1,136 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://PIDJoint6DOF_D.gd" type="Script" id=1]
+[ext_resource path="res://LegD.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Chassis.gd" type="Script" id=3]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 20, 1, 20 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 40, 2, 40 )
+
+[sub_resource type="SpatialMaterial" id=16]
+albedo_color = Color( 0.337255, 1, 0, 1 )
+
+[sub_resource type="PrismMesh" id=17]
+material = SubResource( 16 )
+
+[sub_resource type="SpatialMaterial" id=18]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="PrismMesh" id=19]
+material = SubResource( 18 )
+
+[node name="TankD" type="Spatial"]
+
+[node name="LegD1" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -20, 0, 20 )
+
+[node name="LegD2" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -20, 0, -20 )
+
+[node name="LegD3" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 20, 0, 20 )
+
+[node name="LegD4" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 20, 0, -20 )
+
+[node name="Chassis" type="Spatial" parent="."]
+script = ExtResource( 3 )
+
+[node name="Platform" type="RigidBody" parent="Chassis"]
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Chassis/Platform"]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/CollisionShape"]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="Face" type="MeshInstance" parent="Chassis/Platform"]
+transform = Transform( 2, 0, 0, 0, -1, -1.73205, 0, 1.73205, -1, 0, -2.38419e-07, 21 )
+mesh = SubResource( 17 )
+skeleton = NodePath("../..")
+material/0 = null
+
+[node name="baseBTOrig1" type="Position3D" parent="Chassis/Platform"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 20 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/baseBTOrig1"]
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="baseBTOrig2" type="Position3D" parent="Chassis/Platform"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, -20 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/baseBTOrig2"]
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="baseBTOrig3" type="Position3D" parent="Chassis/Platform"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 20 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/baseBTOrig3"]
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="baseBTOrig4" type="Position3D" parent="Chassis/Platform"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -20 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/baseBTOrig4"]
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="Joint1" type="Generic6DOFJoint" parent="Chassis"]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -20, 0, 20 )
+nodes/node_a = NodePath("../Platform")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 12500, 12500, 12500 )
+stiffnessB = Vector3( 25000, 25000, 25000 )
+dampingA = Vector3( 5000, 5000, 5000 )
+dampingB = Vector3( 2500, 2500, 2500 )
+baseBTOrigPath = NodePath("../Platform/baseBTOrig1")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Chassis/Joint1"]
+margin_right = 235.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Joint2" type="Generic6DOFJoint" parent="Chassis"]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -20, 0, -20 )
+nodes/node_a = NodePath("../Platform")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 12500, 12500, 12500 )
+stiffnessB = Vector3( 25000, 25000, 25000 )
+dampingA = Vector3( 5000, 5000, 5000 )
+dampingB = Vector3( 2500, 2500, 2500 )
+baseBTOrigPath = NodePath("../Platform/baseBTOrig2")
+
+[node name="Joint3" type="Generic6DOFJoint" parent="Chassis"]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 20, 0, 20 )
+nodes/node_a = NodePath("../Platform")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 12500, 12500, 12500 )
+stiffnessB = Vector3( 25000, 25000, 25000 )
+dampingA = Vector3( 5000, 5000, 5000 )
+dampingB = Vector3( 2500, 2500, 2500 )
+baseBTOrigPath = NodePath("../Platform/baseBTOrig3")
+
+[node name="Joint4" type="Generic6DOFJoint" parent="Chassis"]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 20, 0, -20 )
+nodes/node_a = NodePath("../Platform")
+collision/exclude_nodes = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 12500, 12500, 12500 )
+stiffnessB = Vector3( 25000, 25000, 25000 )
+dampingA = Vector3( 5000, 5000, 5000 )
+dampingB = Vector3( 2500, 2500, 2500 )
+baseBTOrigPath = NodePath("../Platform/baseBTOrig4")

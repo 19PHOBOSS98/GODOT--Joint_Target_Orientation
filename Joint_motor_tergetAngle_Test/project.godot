@@ -119,6 +119,7 @@ z={
 
 common/physics_fps=240
 3d/physics_engine="Bullet"
+3d/active_soft_world=false
 
 [rendering]
 

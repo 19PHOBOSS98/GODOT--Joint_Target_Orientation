@@ -1,15 +1,9 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Vira.tscn" type="PackedScene" id=1]
-[ext_resource path="res://PIDJoint6DOF.gd" type="Script" id=2]
-[ext_resource path="res://Tank.tscn" type="PackedScene" id=3]
-[ext_resource path="res://V3PID.gd" type="Script" id=5]
-[ext_resource path="res://Step_curve.tres" type="Curve" id=6]
-[ext_resource path="res://V9_HOVER_MODULE.tres" type="Curve" id=7]
-
-[sub_resource type="CapsuleMesh" id=16]
-radius = 0.5
-mid_height = 10.0
+[ext_resource path="res://texture_03.png" type="Texture" id=2]
+[ext_resource path="res://TankD.tscn" type="PackedScene" id=3]
+[ext_resource path="res://LegD.tscn" type="PackedScene" id=4]
 
 [sub_resource type="BoxShape" id=7]
 extents = Vector3( 4, 4, 4 )
@@ -28,340 +22,31 @@ albedo_color = Color( 0.964706, 0.443137, 0.027451, 1 )
 material = SubResource( 46 )
 size = Vector3( 8, 8, 8 )
 
+[sub_resource type="BoxShape" id=49]
+extents = Vector3( 10, 20, 10 )
+
+[sub_resource type="SpatialMaterial" id=51]
+albedo_color = Color( 0.027451, 0.964706, 0.392157, 1 )
+
+[sub_resource type="CubeMesh" id=50]
+material = SubResource( 51 )
+size = Vector3( 20, 40, 20 )
+
 [sub_resource type="BoxShape" id=2]
 extents = Vector3( 1000, 1, 1000 )
 
+[sub_resource type="SpatialMaterial" id=48]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 45, 30, 1 )
+
 [sub_resource type="CubeMesh" id=1]
+material = SubResource( 48 )
 size = Vector3( 2000, 2, 2000 )
-
-[sub_resource type="GDScript" id=26]
-script/source = "tool
-extends RigidBody
-
-onready var leg =  $RayCast
-onready var link = $Generic6DOFJoint
-onready var shape2 = $CollisionShape2
-onready var shape = $CollisionShape
-
-
-
-
-var thruster_distance = 15	#half way along the total length of the raycast, for climbing
-
-#var plugged_body = null
-
-var thruster_count = 1
-var initializing = true
-
-var previous_displacement = 0
-var displacement = 0
-var speed = 0
-
-var dampening = 0.005
-var softness = 0.9
-
-onready var body_weight = weight
-
-
-export(float,0.0,1.0,0.01) var strength_percentage_setting = 1
-
-var gravity = 9.8 
-
-var part_of_build = false
-
-
-
-var thruster_strength = 0
-
-func _ready():
-	add_to_group(\"propulsion\")
-	add_to_group(\"thrusters\")
-#	add_to_group(\"bodies\")
-
-
-
-
-func _physics_process(delta):
-	if(initializing):
-		initialize()
-		initializing = false
-	thrust(delta)
-	
-
-
-var new_dist_y = 0
-func thrust(delta):
-	var distance_percentage
-	var downward_force
-
-#	var distance = -leg.dist_y
-	var distance = -new_dist_y
-	previous_displacement = displacement
-	displacement = distance
-	speed = (displacement - previous_displacement)/delta
-	var dampening_force = dampening * speed
-
-	distance_percentage = 1-(distance/thruster_distance)
-	distance_percentage -= dampening_force
-#	prints(thruster_strength)
-
-	downward_force = global_transform.basis.y * thruster_strength * distance_percentage * softness * strength_percentage_setting
-
-	if(leg.is_colliding()):
-		add_central_force(downward_force)
-
-
-
-
-var parent = null
-func initialize():
-	parent = get_parent()
-	if(parent.is_in_group(\"builds\")):
-		var error = parent.connect(\"good_news_everyone\",self,\"update_thrust\")
-		if error:
-			print(name,\"Connect failed\",parent)
-####replace with player build linking mechanic####
-		link.set(\"nodes/node_a\",self.get_path())
-		link.set(\"nodes/node_b\",link.get_parent().get_parent().get_node(\"SHELL\").get_path())
-		reparent_collision()
-		part_of_build = true
-	else:
-		add_to_group(\"bodies\")
-	update_thrust(parent)
-	
-func reparent_collision():
-	prints(\"reparenting to\",parent.get_node(\"SHELL\").name)
-	remove_child(shape2)
-	parent.get_node(\"SHELL\").add_child(shape2)
-	leg.add_exception(parent.get_node(\"SHELL\"))
-	shape2.global_transform = global_transform
-
-
-
-var distributed_weight = 0
-func update_thrust(my_parent):#,build_thruster_count,build_gravity_acceleration,build_scaled_gravity,build_total_mass):
-	if(my_parent == get_parent()):
-		if(part_of_build):
-			body_weight = my_parent.total_mass * my_parent.gravity_acceleration #build_total_mass * build_gravity_acceleration#
-			thruster_count = my_parent.thruster_count #build_thruster_count#
-			set_gravity_scale(my_parent.scaled_gravity)#build_scaled_gravity)#
-#			plugged_body = link.get_node(link.get(\"nodes/node_b\"))
-			gravity = my_parent.gravity_acceleration*gravity_scale#build_gravity_acceleration*gravity_scale#
-
-		var true_weight = body_weight
-		true_weight *= gravity_scale
-		distributed_weight = true_weight/thruster_count #default naive thrust distribution
-		
-		set_thrust_strength(distributed_weight)
-		
-#		diagnose_gravity_weight(true_weight)
-
-
-
-## wait for hover control module to compensate for center of mass offsets ##
-func set_thrust_strength(dist_w):
-	
-	var clamped_dist_w = clamp(dist_w,0,50000)#clamp for thruster classes/tiering
-	var calculated_strength = clamped_dist_w*4#/0.25
-	var partial_thrust_strength = calculated_strength
-	var percent = 0							#default percentage value if gravity exceeds 700Gs, basically it gives up hovering
-	if(gravity > 300):						#I found that beyond 375Gs I had to cut down the set_strength to avoid jiggling
-		if(gravity < 700):
-			percent = 1.75 - (gravity/400)		#MATH!!!, it's a graph of a line, we use 100% of set_thrust under 300Gs and proportionally dim it down the stronger gravity gets from that point on 
-											
-		partial_thrust_strength *= percent		#it aint a perfect match to the actual but it gets the job done and puts a cap on the thrust before the jiggling happens...
-
-#	diagnose_com_compensate(clamped_dist_w,calculated_strength,partial_thrust_strength,percent)
-
-	thruster_strength = partial_thrust_strength
-
-
-
-func diagnose_com_compensate(clamped_dist_w,calculated_strength,partial_thrust_strength,percent):
-	if(gravity > 300):
-		prints(name,\"distr:\",clamped_dist_w,\"100%:\",calculated_strength,\"partial:\", partial_thrust_strength,\"%:\",percent)
-	else:
-		prints(name,\"distr:\",clamped_dist_w,\"100%:\",calculated_strength,\"partial:\", partial_thrust_strength,\"%:\",1)
-
-func diagnose_gravity_weight(true_w):
-		printt(name,\"gravity:\",gravity,\"true weight\",true_w)
-"
-
-[sub_resource type="GDScript" id=27]
-script/source = "extends RayCast
-
-onready var distance_point = $Position3D
-onready var parent = get_parent()
-var dist_y = 0
-
-func _physics_process(_delta):
-	if(is_colliding()):
-		distance_point.global_transform.origin = get_collision_point()
-#	dist_y = distance_point.transform.origin.y
-	parent.new_dist_y = distance_point.transform.origin.y
-"
-
-[sub_resource type="SphereMesh" id=28]
-
-[sub_resource type="SpatialMaterial" id=29]
-albedo_color = Color( 0, 1, 0.0627451, 1 )
-
-[sub_resource type="BoxShape" id=30]
-
-[sub_resource type="CubeMesh" id=31]
-size = Vector3( 4, 4, 4 )
-
-[sub_resource type="SpatialMaterial" id=32]
-albedo_color = Color( 1, 0.584314, 0, 1 )
-
-[sub_resource type="BoxShape" id=33]
-extents = Vector3( 2, 2, 2 )
-
-[sub_resource type="SphereMesh" id=34]
-
-[sub_resource type="CubeMesh" id=35]
-
-[sub_resource type="GDScript" id=36]
-script/source = "#tool
-extends SkeletonIK
-
-export (Curve) var ik_int_curve
-onready var step_nd = get_node(\"../../../Step\")
-onready var ray_step = get_node(\"../../Step_pointer\")
-onready var tween = $Tween
-
-var stride_distance = 10
-var check = true
-
-export (Curve) var step_curve
-func _ready():
-	start()
-
-var track = Vector3()
-func _physics_process(delta):
-	step_nd.global_transform.origin = track
-
-
-var foot_pos
-func check_distance():
-	foot_pos = step_nd.global_transform.origin
-	var next_foot_pos = ray_step.get_collision_point()
-	var step_dist = foot_pos.distance_to(next_foot_pos)
-#	prints(step_dist,step_dist >= stride_distance)
-	return(step_dist >= stride_distance)
-		
-
-func animate():
-	if(!is_running()):
-		start()
-
-
-
-
-func _input(event):
-	if(event.is_action_pressed(\"1\")):
-		take_step2()
-
-var stride_time2 = 1
-var new_p
-func take_step2():
-	var current_p = step_nd.global_transform.origin
-	new_p = ray_step.get_collision_point()
-
-#	tween.interpolate_method(self,\"stride\",current_p,new_p,stride_time2,Tween.TRANS_SINE,Tween.EASE_OUT)
-	tween.interpolate_method(self,\"stride2\",current_p,new_p,stride_time2,Tween.TRANS_CUBIC,Tween.EASE_OUT)
-	tween.start()
-	pass
-
-func y_value(x):
-	return step_curve.interpolate(x)
-## has precise control of step height but way less efficient than dipping the IK Interpolation parameter
-func stride(s):
-	var tween_time = tween.tell()
-	var stride_percent = tween_time/stride_time2
-	var body_gt = owner.global_transform
-	var current_p = body_gt.xform_inv(s)
-	current_p.y += y_value(stride_percent)
-	current_p = body_gt.xform(current_p)
-	track = current_p
-
-
-
-func set_interp_influence(y):
-	interpolation = y
-	
-func y_value2(x):
-	return ik_int_curve.interpolate(x)
-
-## way efficient but less precise control of step height
-func stride2(s):
-	var tween_time = tween.tell()
-	var stride_percent = tween_time/stride_time2
-	track = s
-	set_interp_influence(y_value2(stride_percent))
-
-
-
-
-
-
-
-
-
-
-"
-
-[sub_resource type="CubeMesh" id=37]
-size = Vector3( 1, 5, 1 )
-
-[sub_resource type="CubeMesh" id=38]
-size = Vector3( 1, 8, 1 )
-
-[sub_resource type="SpatialMaterial" id=14]
-albedo_color = Color( 0.94902, 0.0235294, 0.0235294, 1 )
-
-[sub_resource type="CubeMesh" id=39]
-size = Vector3( 1, 25, 1 )
-
-[sub_resource type="SpatialMaterial" id=40]
-albedo_color = Color( 0, 0.882353, 1, 1 )
-
-[sub_resource type="BoxShape" id=20]
-extents = Vector3( 0.5, 2, 0.5 )
-
-[sub_resource type="CubeMesh" id=21]
-size = Vector3( 1, 4, 1 )
-
-[sub_resource type="SpatialMaterial" id=44]
-albedo_color = Color( 0.909804, 0.545098, 0.0235294, 1 )
-
-[sub_resource type="CubeMesh" id=43]
-material = SubResource( 44 )
-size = Vector3( 4, 4, 4 )
-
-[sub_resource type="BoxShape" id=23]
-extents = Vector3( 0.5, 4, 0.5 )
-
-[sub_resource type="CubeMesh" id=24]
-size = Vector3( 1, 8, 1 )
-
-[sub_resource type="BoxShape" id=41]
-extents = Vector3( 0.5, 10, 0.5 )
-
-[sub_resource type="CubeMesh" id=42]
-size = Vector3( 1, 20, 1 )
 
 [node name="Spatial" type="Spatial"]
 
-[node name="Position3D" type="Position3D" parent="."]
-transform = Transform( -1, -6.18172e-08, -6.18172e-08, 0, 0.707107, -0.707107, 8.74228e-08, -0.707107, -0.707107, 0, 19.965, 45.4777 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Position3D"]
-mesh = SubResource( 16 )
-material/0 = null
-
 [node name="RigidBody2" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -74.4959, 99.2503, 25.0714 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5041, 572.25, -13.9286 )
 mass = 50.0
 can_sleep = false
 
@@ -373,7 +58,7 @@ mesh = SubResource( 8 )
 material/0 = null
 
 [node name="RigidBody7" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -50.4959, 99.2503, 66.0714 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5041, 572.25, 27.0714 )
 mass = 50.0
 can_sleep = false
 
@@ -384,8 +69,20 @@ shape = SubResource( 7 )
 mesh = SubResource( 47 )
 material/0 = null
 
+[node name="RigidBody8" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.496, 572.25, 0.0713997 )
+mass = 200.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody8"]
+shape = SubResource( 49 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody8/CollisionShape"]
+mesh = SubResource( 50 )
+material/0 = null
+
 [node name="Vira" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -35.8684, 48.0536, 104.305 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -87.8684, -8.9464, 291.305 )
 
 [node name="Floor" type="StaticBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30.0254, 0 )
@@ -400,269 +97,8 @@ material/0 = null
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.791234, 0.449316, -0.414806, 0, 0.678326, 0.734761, 0.611513, -0.581368, 0.536715, -123.682, 7.26655, -99.2583 )
 
-[node name="V11_HOVER_MODULE" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 39, -17, 0 )
-script = SubResource( 26 )
+[node name="LegD" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 35, 190 )
 
-[node name="RayCast" type="RayCast" parent="V11_HOVER_MODULE"]
-enabled = true
-cast_to = Vector3( 0, -30, 0 )
-script = SubResource( 27 )
-
-[node name="Position3D" type="Position3D" parent="V11_HOVER_MODULE/RayCast"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30, 0 )
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/RayCast/Position3D" groups=["debug_mesh", "not_include_aabb"]]
-mesh = SubResource( 28 )
-material/0 = SubResource( 29 )
-
-[node name="Generic6DOFJoint" type="HingeJoint" parent="V11_HOVER_MODULE"]
-params/bias = 0.99
-angular_limit/enable = true
-angular_limit/upper = 0.0
-angular_limit/lower = 0.0
-angular_limit/bias = 0.99
-
-[node name="CollisionShape" type="CollisionShape" parent="V11_HOVER_MODULE"]
-shape = SubResource( 30 )
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/CollisionShape"]
-mesh = SubResource( 31 )
-material/0 = SubResource( 32 )
-
-[node name="CollisionShape2" type="CollisionShape" parent="V11_HOVER_MODULE"]
-shape = SubResource( 33 )
-
-[node name="Step" type="Position3D" parent="V11_HOVER_MODULE"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16, -15, 0 )
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/Step" groups=["debug_mesh", "not_include_aabb"]]
-mesh = SubResource( 34 )
-material/0 = null
-
-[node name="LEG" type="Spatial" parent="V11_HOVER_MODULE"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0 )
-
-[node name="Step_pointer" type="RayCast" parent="V11_HOVER_MODULE/LEG"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -13 )
-enabled = true
-cast_to = Vector3( 0, -30, 0 )
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Step_pointer" groups=["debug_mesh", "not_include_aabb"]]
-mesh = SubResource( 35 )
-material/0 = null
-
-[node name="Skeleton" type="Skeleton" parent="V11_HOVER_MODULE/LEG"]
-bones/0/name = "bone"
-bones/0/parent = -1
-bones/0/rest = Transform( 0, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0 )
-bones/0/enabled = true
-bones/0/bound_children = [  ]
-bones/1/name = "bone_1"
-bones/1/parent = 0
-bones/1/rest = Transform( 1, 3.76337e-08, -2.22349e-08, 0, -0.508675, -0.860959, -4.37114e-08, 0.860959, -0.508675, 0, 4, 0 )
-bones/1/enabled = true
-bones/1/bound_children = [ NodePath("BoneAttachment2") ]
-bones/2/name = "bone_2"
-bones/2/parent = 1
-bones/2/rest = Transform( 1, -3.88578e-16, -2.98023e-08, -1.78756e-09, 0.9982, -0.0599806, 2.97487e-08, 0.0599806, 0.998199, 1.72054e-22, 7.96121, -4.84288e-08 )
-bones/2/enabled = true
-bones/2/bound_children = [ NodePath("BoneAttachment3") ]
-bones/3/name = "bone_3"
-bones/3/parent = 2
-bones/3/rest = Transform( 1, -1.66714e-08, 2.47031e-08, -1.77636e-15, 0.828898, 0.5594, -2.98023e-08, -0.5594, 0.828898, 6.96376e-15, 15.828, 2.38419e-07 )
-bones/3/enabled = true
-bones/3/bound_children = [  ]
-
-[node name="SkeletonIK" type="SkeletonIK" parent="V11_HOVER_MODULE/LEG/Skeleton"]
-process_priority = 1
-root_bone = "bone_1"
-tip_bone = "bone_3"
-target_node = NodePath("../../../Step")
-script = SubResource( 36 )
-__meta__ = {
-"_editor_description_": "precise control over stride sequence
-by inserting a variable y value from a curve to the transform.y of the IK target
-have to peel back IK targets global_transform to local and back again
-
-not so efficient as dipping the IK interpolation parameter tho (Stride2())"
-}
-ik_int_curve = ExtResource( 6 )
-step_curve = ExtResource( 7 )
-
-[node name="Tween" type="Tween" parent="V11_HOVER_MODULE/LEG/Skeleton/SkeletonIK"]
-
-[node name="BoneAttachment" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment" groups=["leg_mesh"]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
-mesh = SubResource( 37 )
-material/0 = null
-
-[node name="BoneAttachment2" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
-transform = Transform( 4.37114e-08, -0.860959, 0.508675, 0, 0.508675, 0.860959, -1, -3.76337e-08, 2.22349e-08, 0, -4, 0 )
-bone_name = "bone_1"
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2" groups=["leg_mesh"]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
-mesh = SubResource( 38 )
-material/0 = SubResource( 14 )
-
-[node name="BoneAttachment3" type="BoneAttachment" parent="V11_HOVER_MODULE/LEG/Skeleton"]
-transform = Transform( 6.03828e-08, -0.828899, 0.5594, 2.47031e-08, 0.5594, 0.828898, -1, -3.62323e-08, 5.42544e-08, -6.85428, 0.0496683, -2.9961e-07 )
-bone_name = "bone_2"
-
-[node name="MeshInstance" type="MeshInstance" parent="V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment3" groups=["leg_mesh"]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
-mesh = SubResource( 39 )
-material/0 = SubResource( 40 )
-
-[node name="interp" type="Tween" parent="V11_HOVER_MODULE"]
-
-[node name="Tank" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -86, 19, 32 )
-
-[node name="Physics_Leg" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 32 )
-
-[node name="A" type="StaticBody" parent="Physics_Leg"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17, 0 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/A"]
-shape = SubResource( 20 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/A/CollisionShape"]
-mesh = SubResource( 21 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/A"]
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/A"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 0 )
-mesh = SubResource( 43 )
-material/0 = null
-
-[node name="PIDJoint6DOF" type="Generic6DOFJoint" parent="Physics_Leg"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 0 )
-nodes/node_a = NodePath("../A")
-nodes/node_b = NodePath("../B")
-collision/exclude_nodes = false
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
-script = ExtResource( 2 )
-stiffnessB = 500.0
-dampingB = 30.0
-target_node_orientation_b = NodePath("../../V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2/MeshInstance")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = -1.0
-margin_top = 106.0
-margin_right = 523.0
-margin_bottom = 181.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = 2.0
-margin_top = 187.0
-margin_right = 561.0
-margin_bottom = 262.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF"]
-visible = false
-margin_left = -1.0
-margin_top = 163.0
-margin_right = 556.0
-margin_bottom = 238.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AngularVelocityPID" type="Node" parent="Physics_Leg/PIDJoint6DOF"]
-script = ExtResource( 5 )
-
-[node name="Vector3_PID" type="Node" parent="Physics_Leg/PIDJoint6DOF"]
-script = ExtResource( 5 )
-
-[node name="B" type="RigidBody" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, 0, 0.508681, 0.860955, -1, 3.76335e-08, -2.22351e-08, -3, 15, 0 )
-mass = 500.0
-gravity_scale = 0.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/B"]
-shape = SubResource( 23 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/B/CollisionShape"]
-mesh = SubResource( 24 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/B"]
-
-[node name="PIDJoint6DOF2" type="Generic6DOFJoint" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, 0, 0.508681, 0.860955, -1, 3.76335e-08, -2.22351e-08, -7.30478, 17.5434, 0 )
-nodes/node_a = NodePath("../B")
-nodes/node_b = NodePath("../B2")
-angular_limit_x/enabled = false
-angular_limit_y/enabled = false
-angular_limit_z/enabled = false
-script = ExtResource( 2 )
-stiffnessB = 50.0
-dampingB = 30.0
-target_node_orientation_b = NodePath("../../V11_HOVER_MODULE/LEG/Skeleton/BoneAttachment2/MeshInstance")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = -1.0
-margin_top = 106.0
-margin_right = 523.0
-margin_bottom = 181.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = 2.0
-margin_top = 187.0
-margin_right = 561.0
-margin_bottom = 262.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="Physics_Leg/PIDJoint6DOF2"]
-margin_left = -1.0
-margin_top = 163.0
-margin_right = 556.0
-margin_bottom = 238.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AngularVelocityPID" type="Node" parent="Physics_Leg/PIDJoint6DOF2"]
-script = ExtResource( 5 )
-
-[node name="Vector3_PID" type="Node" parent="Physics_Leg/PIDJoint6DOF2"]
-script = ExtResource( 5 )
-
-[node name="B2" type="RigidBody" parent="Physics_Leg"]
-transform = Transform( -4.37114e-08, -0.860955, 0.508681, -2.08503e-15, 0.508681, 0.860955, -1, 3.76336e-08, -2.22351e-08, -15.9143, 22.6302, 0 )
-mass = 500.0
-gravity_scale = 0.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="Physics_Leg/B2"]
-shape = SubResource( 41 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Physics_Leg/B2/CollisionShape"]
-transform = Transform( 1, 0, 0, -7.10543e-15, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, 0, 0 )
-mesh = SubResource( 42 )
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="Physics_Leg/B2"]
+[node name="TankD" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0 )

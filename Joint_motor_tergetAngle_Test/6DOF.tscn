@@ -32,7 +32,7 @@ material/0 = null
 [node name="Position3D" type="Position3D" parent="A2"]
 
 [node name="B2" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
 mass = 500.0
 gravity_scale = 0.0
 can_sleep = false
@@ -53,7 +53,7 @@ material/0 = null
 [node name="Position3D" type="Position3D" parent="B2"]
 
 [node name="PIDJoint6DOF2" type="Generic6DOFJoint" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
 nodes/node_a = NodePath("../A2")
 nodes/node_b = NodePath("../B2")
 collision/exclude_nodes = false
@@ -65,9 +65,7 @@ stiffnessA = 10.0
 stiffnessB = 5000.0
 dampingA = 30.0
 dampingB = 30.0
-rest_angle_x = 45.0
-rest_angle_y = -45.0
-rest_angle_z = 45.0
+rest_angle_y = 90.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint6DOF2"]
 margin_left = -1.0
