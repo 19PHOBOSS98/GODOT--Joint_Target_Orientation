@@ -38,7 +38,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/PinSpringJoint2D/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/Recorder/plugin.cfg" )
 
 [input]
 
