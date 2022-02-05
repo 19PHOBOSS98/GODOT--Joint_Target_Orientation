@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=2]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 10, 1, 10 )
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 1, 0.121569, 0.0313726, 1 )
+
+[sub_resource type="CubeMesh" id=6]
+material = SubResource( 5 )
+size = Vector3( 20, 2, 20 )
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 20, 2, 20 )
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_color = Color( 0.12549, 0.054902, 0.968627, 1 )
+
+[sub_resource type="CylinderMesh" id=3]
+material = SubResource( 4 )
+
+[node name="6DOF_Euler_DEMO" type="Spatial"]
+
+[node name="RigidBody" type="RigidBody" parent="."]
+mode = 1
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
+shape = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody/CollisionShape"]
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="Generic6DOFJoint" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
+nodes/node_a = NodePath("../RigidBody")
+nodes/node_b = NodePath("../RigidBody2")
+angular_limit_x/enabled = false
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 50000.0
+angular_spring_x/damping = 50000.0
+angular_limit_y/enabled = false
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 50000.0
+angular_spring_y/damping = 50000.0
+angular_spring_y/equilibrium_point = 1.57
+angular_limit_z/enabled = false
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 50000.0
+angular_spring_z/damping = 50000.0
+
+[node name="RigidBody2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody2"]
+shape = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody2/CollisionShape"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -25, 0, 0 )
+mesh = SubResource( 3 )
+material/0 = null

@@ -1,0 +1,277 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://QuatJoint6DOF_F.gd" type="Script" id=1]
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 20, 1, 1 )
+
+[sub_resource type="CubeMesh" id=12]
+size = Vector3( 40, 2, 2 )
+
+[sub_resource type="CylinderMesh" id=13]
+
+[sub_resource type="PhysicsMaterial" id=16]
+
+[sub_resource type="BoxShape" id=14]
+extents = Vector3( 20, 1, 1 )
+
+[sub_resource type="CubeMesh" id=15]
+size = Vector3( 40, 2, 2 )
+
+[node name="Skinny_SnekF" type="Spatial" groups=["LEG"]]
+
+[node name="Base" type="RigidBody" parent="."]
+mode = 1
+mass = 50.0
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="Base"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Base/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="QuatJoint6DOF2" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0 )
+nodes/node_a = NodePath("../Base")
+nodes/node_b = NodePath("../B2")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 2500, 2500, 2500 )
+stiffnessB = Vector3( 2500, 2500, 2500 )
+dampingA = Vector3( 500, 500, 500 )
+dampingB = Vector3( 500, 500, 500 )
+rest_angle_z = 45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 0, 0 )
+mass = 50.0
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B2"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -40, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="QuatJoint6DOF3" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, 0 )
+nodes/node_a = NodePath("../B2")
+nodes/node_b = NodePath("../B3")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 2500, 2500, 2500 )
+stiffnessB = Vector3( 2500, 2500, 2500 )
+dampingA = Vector3( 500, 500, 500 )
+dampingB = Vector3( 500, 500, 500 )
+rest_angle_z = -45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF3"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF3"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF3"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B3" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 160, 0, 0 )
+mass = 50.0
+physics_material_override = SubResource( 16 )
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B3"]
+shape = SubResource( 14 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B3/CollisionShape"]
+mesh = SubResource( 15 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B3"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -40, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="QuatJoint6DOF4" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 200, 0, 0 )
+nodes/node_a = NodePath("../B3")
+nodes/node_b = NodePath("../B4")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 2500, 2500, 2500 )
+stiffnessB = Vector3( 2500, 2500, 2500 )
+dampingA = Vector3( 500, 500, 500 )
+dampingB = Vector3( 500, 500, 500 )
+rest_angle_z = 45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF4"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF4"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF4"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B4" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 240, 0, 0 )
+mass = 50.0
+physics_material_override = SubResource( 16 )
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B4"]
+shape = SubResource( 14 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B4/CollisionShape"]
+mesh = SubResource( 15 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B4"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -40, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="QuatJoint6DOF5" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 280, 0, 0 )
+nodes/node_a = NodePath("../B4")
+nodes/node_b = NodePath("../B5")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 2500, 2500, 2500 )
+stiffnessB = Vector3( 2500, 2500, 2500 )
+dampingA = Vector3( 500, 500, 500 )
+dampingB = Vector3( 500, 500, 500 )
+rest_angle_y = 45.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF5"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF5"]
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF5"]
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B5" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 320, 0, 0 )
+mass = 50.0
+physics_material_override = SubResource( 16 )
+gravity_scale = 0.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B5"]
+shape = SubResource( 14 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B5/CollisionShape"]
+mesh = SubResource( 15 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B5"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -40, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
