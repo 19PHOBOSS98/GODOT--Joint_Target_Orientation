@@ -8,7 +8,8 @@ https://youtu.be/htMDZ0fXJWo
 ![001](https://user-images.githubusercontent.com/37253663/152513594-8664cd0a-4f48-4bde-9882-42eccecb7944.png)
 
 
-<img width="1226" alt="Screen Shot 2022-02-05 at 10 50 37 PM" src="https://user-images.githubusercontent.com/37253663/152646834-69c39674-d93a-4267-9cb5-08fce587f031.png">
+<img width="1206" alt="Screen Shot 2022-02-06 at 7 17 30 AM" src="https://user-images.githubusercontent.com/37253663/152662183-76c1b943-bfc9-4248-b293-dda5869be2f9.png">
+
 
 Works in chains too:
 
