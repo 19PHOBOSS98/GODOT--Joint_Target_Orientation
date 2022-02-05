@@ -32,9 +32,9 @@ Basis Vector Transform from "Puppeteer" node:
 
 Thanks to:
 
-	DMGregory: https://gamedev.stackexchange.com/questions/182850/rotate-rigidbody-to-face-away-from-camera-with-addtorque/182873#182873
-	&
-	The Step Event: https://youtu.be/vewwP8Od_7s
+DMGregory: https://gamedev.stackexchange.com/questions/182850/rotate-rigidbody-to-face-away-from-camera-with-addtorque/182873#182873
+	
+The Step Event: https://youtu.be/vewwP8Od_7s
 	
 For the calculations
 
