@@ -1,0 +1,250 @@
+[gd_scene load_steps=33 format=2]
+
+[ext_resource path="res://Vira.tscn" type="PackedScene" id=1]
+[ext_resource path="res://texture_03.png" type="Texture" id=2]
+[ext_resource path="res://Spider_LegG_Shadow_Puppet.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/Recorder/recorder.gd" type="Script" id=5]
+[ext_resource path="res://6DOF_F_DEMO.tscn" type="PackedScene" id=6]
+[ext_resource path="res://6DOF_Euler_DEMO.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Spider_LegF.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Spider_LegG_Shadow_Puppet_By_Joints.tscn" type="PackedScene" id=9]
+[ext_resource path="res://SKinny_SnekF.tscn" type="PackedScene" id=10]
+[ext_resource path="res://SnekF.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Spider_LegG.tscn" type="PackedScene" id=12]
+[ext_resource path="res://LegF.tscn" type="PackedScene" id=13]
+[ext_resource path="res://LegG_Orientation_By_Basis_Vectors.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Dampening_Experiment.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Dampening_Experiment_2.tscn" type="PackedScene" id=16]
+[ext_resource path="res://TEST_INERTIA.gd" type="Script" id=17]
+[ext_resource path="res://Test_Trq.gd" type="Script" id=18]
+
+[sub_resource type="BoxShape" id=7]
+extents = Vector3( 4, 4, 4 )
+
+[sub_resource type="SpatialMaterial" id=45]
+albedo_color = Color( 0.545098, 0.0392157, 0.890196, 1 )
+
+[sub_resource type="CubeMesh" id=8]
+material = SubResource( 45 )
+size = Vector3( 8, 8, 8 )
+
+[sub_resource type="SpatialMaterial" id=46]
+albedo_color = Color( 0.964706, 0.443137, 0.027451, 1 )
+
+[sub_resource type="CubeMesh" id=47]
+material = SubResource( 46 )
+size = Vector3( 8, 8, 8 )
+
+[sub_resource type="BoxShape" id=49]
+extents = Vector3( 10, 20, 10 )
+
+[sub_resource type="SpatialMaterial" id=51]
+albedo_color = Color( 0.027451, 0.964706, 0.392157, 1 )
+
+[sub_resource type="CubeMesh" id=50]
+material = SubResource( 51 )
+size = Vector3( 20, 40, 20 )
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 1000, 1, 1000 )
+
+[sub_resource type="SpatialMaterial" id=48]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 45, 30, 1 )
+
+[sub_resource type="CubeMesh" id=1]
+material = SubResource( 48 )
+size = Vector3( 2000, 2, 2000 )
+
+[sub_resource type="BoxShape" id=52]
+extents = Vector3( 10, 1, 1 )
+
+[sub_resource type="CubeMesh" id=53]
+size = Vector3( 20, 2, 2 )
+
+[sub_resource type="BoxShape" id=54]
+
+[sub_resource type="CubeMesh" id=55]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Vira" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -56 )
+
+[node name="6DOF_Euler_DEMO" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1316, -8.9464, -224.695 )
+
+[node name="6DOF_F_DEMO" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.8684, -8.9464, -224.695 )
+
+[node name="RigidBody3" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -49.4959, 63.25, -290.929 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody3"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody3/CollisionShape"]
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="RigidBody4" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 49.5041, 63.25, -206.929 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody4"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody4/CollisionShape"]
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="RigidBody2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5041, 63.25, 237.071 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody2"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody2/CollisionShape"]
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="RigidBody7" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5041, 228.006, 276.792 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody7"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody7/CollisionShape"]
+mesh = SubResource( 47 )
+material/0 = null
+
+[node name="RigidBody8" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.496, 228.006, 249.792 )
+mass = 200.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody8"]
+shape = SubResource( 49 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody8/CollisionShape"]
+mesh = SubResource( 50 )
+material/0 = null
+
+[node name="Floor" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -27, 236 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Floor"]
+shape = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Floor"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.9946, 0.076255, -0.0703981, 0, 0.678326, 0.734761, 0.103782, -0.730793, 0.674663, -123.682, 7.26655, 136.742 )
+
+[node name="SnekF" parent="." instance=ExtResource( 11 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 112, 96, 547 )
+
+[node name="Skinny_SnekF" parent="." instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 112, 96, 456 )
+
+[node name="Shadow_Puppet_By_Joints_WIP" parent="." instance=ExtResource( 9 )]
+transform = Transform( -0.5, 0, -0.866026, 0, 1, 0, 0.866026, 0, -0.5, -245.043, 90, 215.321 )
+
+[node name="Shadow_Puppet_WIP" parent="." instance=ExtResource( 4 )]
+transform = Transform( -0.5, 0, -0.866026, 0, 1, 0, 0.866026, 0, -0.5, -295.043, 90, 301.924 )
+
+[node name="Spider_LegG_Puppet_By_Basis_Transform" parent="." instance=ExtResource( 12 )]
+transform = Transform( -0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, -0.5, -345.043, 90, 388.526 )
+
+[node name="Spider_LegF_Angle_Rotation" parent="." instance=ExtResource( 8 )]
+transform = Transform( -0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, -0.5, -392.543, 90, 470.799 )
+
+[node name="Recorder" type="ReferenceRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+frames_per_second = 60.0
+output_folder = "/Users/PH0B0SS/Desktop/VIDEO_FRAMES"
+use_thread = true
+
+[node name="LegF" parent="." instance=ExtResource( 13 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -147.3, 64.4, 546.1 )
+
+[node name="LegG" parent="." instance=ExtResource( 14 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -147.3, 64.4, 506.1 )
+
+[node name="RigidBody5" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 68, -50 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody5"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody5/CollisionShape"]
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="RigidBody6" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 68, -50 )
+mass = 50.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody6"]
+shape = SubResource( 7 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody6/CollisionShape"]
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="Experiment_2" parent="." instance=ExtResource( 16 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 33 )
+
+[node name="Experiment" parent="." instance=ExtResource( 15 )]
+
+[node name="TEST_INERTIA" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 46 )
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource( 17 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TEST_INERTIA"]
+shape = SubResource( 52 )
+
+[node name="MeshInstance" type="MeshInstance" parent="TEST_INERTIA/CollisionShape"]
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TEST_INERTIA"]
+margin_left = 682.0
+margin_top = 8.0
+margin_right = 1008.0
+margin_bottom = 134.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Test_Trq" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -83 )
+gravity_scale = 0.0
+angular_damp = 5.0
+script = ExtResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Trq"]
+shape = SubResource( 54 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Test_Trq/CollisionShape"]
+mesh = SubResource( 55 )
+material/0 = null
