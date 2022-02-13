@@ -1,6 +1,12 @@
 tool
 extends Generic6DOFJoint
 
+
+export(Vector3) var stiffnessA = Vector3(10.0,10.0,10.0)
+export(Vector3) var stiffnessB = Vector3(10.0,10.0,10.0)
+export(Vector3) var dampingA = Vector3(5.0,5.0,5.0)
+export(Vector3) var dampingB = Vector3(5.0,5.0,5.0)
+
 export(float,-360.0,360.0) var rest_angle_x = 0.0
 export(float,-360.0,360.0) var rest_angle_y = 0.0
 export(float,-360.0,360.0) var rest_angle_z = 0.0
@@ -175,7 +181,7 @@ Thanks to:
 	For the calculations
 """
 export(Vector3) var ks = Vector3(5.0,5.0,5.0)
-export(Vector3) var kd = Vector3(5.0,5.0,5.0)
+export(float) var zeta_kd = 1.0
 var c = 0
 func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	if Engine.editor_hint:
@@ -225,23 +231,9 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	var axisb = vb / sin(angleB*0.5)# the quats axis
 
 	if(angleB>PI):
-		#angleB -= 2.0*PI
-		angleB -= TAU
+		angleB -= 2.0*PI
 
-	if(is_equal_approx(angleB,0.0)):
-		if body_b.is_class("RigidBody"):
-			#body_b.add_torque(-bAV)
-			#body_b.angular_velocity -= bAV*0.5
-			body_b.angular_velocity -= bAV
-		if body_a.is_class("RigidBody"):
-			#body_a.add_torque(-aAV)
-			#body_a.angular_velocity -= aAV*0.5
-			body_a.angular_velocity -= aAV
-		return
 
-	var error_B = axisb*angleB/delta
-	
-	
 	var rotChangeA = Quat(AT) * qA.inverse()
 	var angleA = 2.0 * acos(rotChangeA.w)
 	if(is_nan(angleA)):
@@ -254,8 +246,7 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 		return
 
 	if(angleA>PI):
-		#angleA -= 2.0*PI
-		angleA -= TAU
+		angleA -= 2.0*PI
 
 	if(is_equal_approx(angleA,0.0)):
 		if body_b.is_class("RigidBody"):
@@ -265,10 +256,18 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 			#body_a.add_torque(-aAV)
 			body_a.angular_velocity -= aAV*0.5
 		return
-	
-	$RichTextLabel.text = "angleA: "+String(angleA)
-	$RichTextLabel2.text = "angleB: "+String(angleB)
-	
+
+
+	if(is_equal_approx(angleB,0.0)):
+		if body_b.is_class("RigidBody"):
+			#body_b.add_torque(-bAV)
+			body_b.angular_velocity -= bAV*0.5
+		if body_a.is_class("RigidBody"):
+			#body_a.add_torque(-aAV)
+			body_a.angular_velocity -= aAV*0.5
+		return
+
+	var error_B = axisb*angleB/delta
 	var va = Vector3(rotChangeA.x,rotChangeA.y,rotChangeA.z)# rotation change quaternion "V" component
 	var axisa = va / sin(angleA*0.5)# the quats axis
 	var error_A = axisa*angleA/delta
@@ -290,7 +289,8 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	var aI_inv_ax_mag = Vector3(aI_inv_ax.x.length(),aI_inv_ax.y.length(),aI_inv_ax.z.length())
 	var bI_inv_ax_mag = Vector3(bI_inv_ax.x.length(),bI_inv_ax.y.length(),bI_inv_ax.z.length())
 
-	
+	#$RichTextLabel.text = "angleA: "+String(angleA)
+	#$RichTextLabel2.text = "angleB: "+String(angleB)
 	
 	if body_a.is_class("RigidBody") && body_a.get_mode()== 0:
 		massA = body_a.mass
@@ -339,15 +339,25 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	var ang_freq = Vector3(sqrt(ks.x*mT_inv.x),sqrt(ks.y*mT_inv.y),sqrt(ks.z*mT_inv.z))
 	
 	if(0.25<ang_freq.x*delta):
-		ks.x = 16.0*mT.x/(delta*delta)
-		#ks.x = 1.0*mT.x/(delta*delta*16.0)
+		#ks.x = 16.0*mT.x/(delta*delta)
+		ks.x = 1.0*mT.x/(delta*delta*16.0)
 	if(0.25<ang_freq.y*delta):
-		ks.y = 16.0*mT.y/(delta*delta)
-		#ks.y = 1.0*mT.y/(delta*delta*16.0)
+		#ks.y = 16.0*mT.y/(delta*delta)
+		ks.y = 1.0*mT.y/(delta*delta*16.0)
 	if(0.25<ang_freq.z*delta):
-		ks.z = 16.0*mT.z/(delta*delta)
-		#ks.z = 1.0*mT.z/(delta*delta*16.0)
-	
+		#ks.z = 16.0*mT.z/(delta*delta)
+		ks.z = 1.0*mT.z/(delta*delta*16.0)
+
+	var kd = Vector3()
+	kd.x = zeta_kd*(2.0*sqrt(mT.x*ks.x))
+	kd.y = zeta_kd*(2.0*sqrt(mT.y*ks.y))
+	kd.z = zeta_kd*(2.0*sqrt(mT.z*ks.z))
+	"""
+	https://github.com/bulletphysics/bullet3/issues/345
+	zeta > 1 -> overdamped
+	zeta = 1 -> critically damped
+	zeta < 1 -> underdamped
+	"""
 	
 	if(kd.x*delta>mT.x):
 		kd.x = mT.x/delta
@@ -355,13 +365,13 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 		kd.y = mT.y/delta
 	if(kd.z*delta>mT.z):
 		kd.z = mT.z/delta
-	
-	#ks = 16.0*mT/(delta*delta)
-	#ks = 1.0*mT/(delta*delta*16.0)
-	#kd = mT/delta
-	#if(kd.x*delta>mT.x && kd.y*delta>mT.y && kd.z*delta>mT.z):
-	#kd = mT/delta
-	
+		
+	#$RichTextLabel.text = "kd: "+String(kd.z)
+	#$RichTextLabel.text = "mT.z: "+String(mT.z)
+	#$RichTextLabel2.text = "mT.z/delta: "+String(mT.z/delta)
+	#$RichTextLabel2.text = "delta: "+String(delta)
+	#$RichTextLabel3.text = "mT.z/delta diff: "+String(mT.z/delta - kd.z)
+	$RichTextLabel3.text = "kd.z*delta>mT.z: "+String(kd.z*delta>mT.z)
 	#if(c<2):
 		#$RichTextLabel.text = "kd: "+String(kd*delta)
 		#$RichTextLabel2.text = "ks: "+String(ks)
@@ -382,12 +392,9 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	#var ta_consolidated = -(ks/mT)*error_B*delta - kd*(aAV-bAV)*delta
 	#var ta_consolidated = (ks/mT)*error_A*delta + kd*(bAV - aAV)*delta
 	
-	#var tb_consolidated = (ks)*error_B*delta - kd*(bAV-aAV)*delta
+	var tb_consolidated = (ks)*error_B*delta - kd*(bAV-aAV)*delta
 	#var ta_consolidated = -(ks)*error_B*delta - kd*(aAV-bAV)*delta
 	#var ta_consolidated = (ks)*error_A*delta - kd*(aAV-bAV)*delta
-	#var ta_consolidated = (ks)*error_A*delta - kd*(bAV-aAV)*delta
-	
-	var tb_consolidated = (ks)*error_B*delta - kd*(bAV-aAV)*delta
 	var ta_consolidated = (ks)*error_A*delta - kd*(bAV-aAV)*delta
 	
 	#var tb_consolidated = (ks/mT)*error_B - kd*(bAV-aAV)

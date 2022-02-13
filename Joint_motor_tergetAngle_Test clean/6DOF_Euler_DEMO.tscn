@@ -26,6 +26,7 @@ material = SubResource( 4 )
 
 [node name="RigidBody" type="RigidBody" parent="."]
 mode = 1
+gravity_scale = 0.0
 can_sleep = false
 
 [node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
@@ -53,10 +54,10 @@ angular_limit_z/enabled = false
 angular_spring_z/enabled = true
 angular_spring_z/stiffness = 5000.0
 angular_spring_z/damping = 5000.0
-angular_spring_z/equilibrium_point = -0.785
 
 [node name="RigidBody2" type="RigidBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
+gravity_scale = 0.0
 can_sleep = false
 
 [node name="CollisionShape" type="CollisionShape" parent="RigidBody2"]

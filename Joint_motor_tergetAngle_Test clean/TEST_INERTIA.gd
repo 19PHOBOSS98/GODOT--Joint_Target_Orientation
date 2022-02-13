@@ -19,6 +19,6 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	var Ii = get_inverse_inertia_tensor().inverse()
-	$RichTextLabel.text ="Test: "+ String(Ii.x)+ String(Ii.y)+ String(Ii.z)
+#func _process(delta):
+	#var Ii = get_inverse_inertia_tensor().inverse()
+	#$RichTextLabel.text ="Test: "+ String(Ii.x)+ String(Ii.y)+ String(Ii.z)

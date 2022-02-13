@@ -72,10 +72,10 @@ size = Vector3( 20, 2, 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -56 )
 
 [node name="6DOF_Euler_DEMO" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1316, -8.9464, -224.695 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1316, 9.0536, -224.695 )
 
 [node name="6DOF_F_DEMO" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.8684, -8.9464, -224.695 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.8684, 9.0536, -224.695 )
 
 [node name="RigidBody3" type="RigidBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -49.4959, 63.25, -290.929 )
