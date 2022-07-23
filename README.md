@@ -36,6 +36,8 @@ Thanks to:
 DMGregory: https://gamedev.stackexchange.com/questions/182850/rotate-rigidbody-to-face-away-from-camera-with-addtorque/182873#182873
 	
 The Step Event: https://youtu.be/vewwP8Od_7s
-	
+
+h4tt3n: https://www.gamedev.net/tutorials/programming/math-and-physics/towards-a-simpler-stiffer-and-more-stable-spring-r3227/
+
 For the calculations
 
