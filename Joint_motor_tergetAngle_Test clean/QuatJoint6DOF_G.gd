@@ -2,10 +2,10 @@ tool
 extends Generic6DOFJoint
 
 
-export(Vector3) var stiffnessA = Vector3(1.0,1.0,1.0)
-export(Vector3) var stiffnessB = Vector3(1.0,1.0,1.0)
-export(Vector3) var dampingA = Vector3(1.0,1.0,1.0)
-export(Vector3) var dampingB = Vector3(1.0,1.0,1.0)
+export(float,0,1) var stiffnessA = 0.0
+export(float,0,1) var stiffnessB = 0.05
+export(float,0,1) var dampingA = 0.0
+export(float,0,1) var dampingB = 1.0
 
 export(float,-360.0,360.0) var rest_angle_x = 0.0
 export(float,-360.0,360.0) var rest_angle_y = 0.0
@@ -48,7 +48,6 @@ func _ready():
 	body_b = get_node(get_node_b())
 	set_body_a(body_a)
 	set_body_b(body_b)
-	set_total_mass()
 	set_base_transform_original(body_a,body_b)
 	
 
@@ -80,13 +79,6 @@ func set_body_b(B):
 		massB = B.mass
 	else:
 		massB = 999999.0
-
-func set_total_mass():
-	if(massA == null || massB == null):
-		hasBase = false
-		massTotal = 0.0
-		return
-	massTotal = massA+massB
 
 #######IGNORE THIS#######
 func SIGNAL_set_body_a():

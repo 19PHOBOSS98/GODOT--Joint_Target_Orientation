@@ -2,14 +2,10 @@ tool
 extends Generic6DOFJoint
 
 
-export(Vector3) var stiffnessA = Vector3(1.0,1.0,1.0)
-export(Vector3) var stiffnessB = Vector3(1.0,1.0,1.0)
-export(Vector3) var dampingA = Vector3(1.0,1.0,1.0)
-export(Vector3) var dampingB = Vector3(1.0,1.0,1.0)
-
-export(float,-360.0,360.0) var rest_angle_x = 0.0
-export(float,-360.0,360.0) var rest_angle_y = 0.0
-export(float,-360.0,360.0) var rest_angle_z = 0.0
+export(float,0,1) var stiffnessA = 0.0
+export(float,0,1) var stiffnessB = 0.05
+export(float,0,1) var dampingA = 0.0
+export(float,0,1) var dampingB = 1.0
 
 var body_b
 var body_a

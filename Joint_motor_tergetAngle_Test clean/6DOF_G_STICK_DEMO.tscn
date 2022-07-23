@@ -48,8 +48,6 @@ angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
-stiffnessA = Vector3( 0.5, 0.5, 0.5 )
-stiffnessB = Vector3( 0.5, 0.5, 0.5 )
 rest_angle_y = -90.0
 rest_angle_z = 45.0
 

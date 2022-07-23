@@ -63,10 +63,6 @@ angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
-stiffnessA = Vector3( 25000, 25000, 25000 )
-stiffnessB = Vector3( 25000, 25000, 25000 )
-dampingA = Vector3( 2500, 2500, 2500 )
-dampingB = Vector3( 2500, 2500, 2500 )
 puppeteer_node = NodePath("../Base/Puppeteer_elbow")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF2"]
@@ -130,10 +126,6 @@ angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
-stiffnessA = Vector3( 25000, 25000, 25000 )
-stiffnessB = Vector3( 50000, 50000, 50000 )
-dampingA = Vector3( 2500, 2500, 2500 )
-dampingB = Vector3( 5000, 5000, 5000 )
 puppeteer_node = NodePath("../B2/Puppeteer_knee")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF3"]
