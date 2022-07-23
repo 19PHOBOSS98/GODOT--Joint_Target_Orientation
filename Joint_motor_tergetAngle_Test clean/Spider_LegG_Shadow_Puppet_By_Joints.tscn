@@ -1,6 +1,8 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://QuatJoint6DOF_G_Orientation_By_Basis.gd" type="Script" id=1]
+[ext_resource path="res://Elbow.gd" type="Script" id=2]
+[ext_resource path="res://Knee.gd" type="Script" id=3]
 
 [sub_resource type="BoxShape" id=11]
 extents = Vector3( 10, 1, 1 )
@@ -10,13 +12,17 @@ size = Vector3( 20, 2, 2 )
 
 [sub_resource type="CylinderMesh" id=13]
 
+[sub_resource type="SpatialMaterial" id=22]
+flags_transparent = true
+albedo_color = Color( 0, 1, 0, 0.266667 )
+
 [sub_resource type="CubeMesh" id=20]
+material = SubResource( 22 )
 size = Vector3( 20, 2, 2 )
 
 [sub_resource type="CubeMesh" id=21]
+material = SubResource( 22 )
 size = Vector3( 60, 2, 2 )
-
-[sub_resource type="PhysicsMaterial" id=16]
 
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 30, 1, 1 )
@@ -29,7 +35,6 @@ size = Vector3( 60, 2, 2 )
 [node name="Base" type="RigidBody" parent="."]
 transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, -15.5, 0 )
 mode = 1
-mass = 50.0
 can_sleep = false
 
 [node name="CollisionShape" type="CollisionShape" parent="Base"]
@@ -46,13 +51,13 @@ skeleton = NodePath("")
 material/0 = null
 
 [node name="Puppeteer_base" type="MeshInstance" parent="Base"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -51, -2.22928e-06, 0 )
 mesh = SubResource( 12 )
 skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="Elbow" type="Position3D" parent="Base/Puppeteer_base"]
 transform = Transform( 0.258819, 0.965926, 0, -0.965926, 0.258819, 0, 0, 0, 1, 15, 6.5567e-07, 0 )
+script = ExtResource( 2 )
 
 [node name="mid_segment" type="MeshInstance" parent="Base/Puppeteer_base/Elbow"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
@@ -62,6 +67,7 @@ material/0 = null
 
 [node name="Knee" type="Position3D" parent="Base/Puppeteer_base/Elbow/mid_segment"]
 transform = Transform( 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 0, 1, 15, -1.14441e-05, 0 )
+script = ExtResource( 3 )
 
 [node name="end_segment" type="MeshInstance" parent="Base/Puppeteer_base/Elbow/mid_segment/Knee"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
@@ -77,10 +83,8 @@ angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
-stiffnessA = Vector3( 10000, 10000, 10000 )
-stiffnessB = Vector3( 10000, 10000, 10000 )
-dampingA = Vector3( 2500, 2500, 2500 )
-dampingB = Vector3( 2500, 2500, 2500 )
+stiffnessA = Vector3( 0.05, 0.05, 0.05 )
+stiffnessB = Vector3( 0.05, 0.05, 0.05 )
 puppeteer_node = NodePath("../Base/Puppeteer_base/Elbow")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF2"]
@@ -112,8 +116,6 @@ __meta__ = {
 
 [node name="B2" type="RigidBody" parent="."]
 transform = Transform( -0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, -10.6066, -19.8934, 0 )
-mass = 50.0
-gravity_scale = 0.0
 can_sleep = false
 
 [node name="CollisionShape" type="CollisionShape" parent="B2"]
@@ -132,17 +134,16 @@ material/0 = null
 [node name="Position3D" type="Position3D" parent="B2"]
 
 [node name="QuatJoint6DOF3" type="Generic6DOFJoint" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.9203, -8.5797, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.92, -8.58, 0 )
 nodes/node_a = NodePath("../B2")
 nodes/node_b = NodePath("../B3")
 angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
-stiffnessA = Vector3( 25000, 25000, 25000 )
-stiffnessB = Vector3( 25000, 25000, 25000 )
-dampingA = Vector3( 2500, 2500, 2500 )
-dampingB = Vector3( 4000, 4000, 4000 )
+stiffnessA = Vector3( 0.05, 0.05, 0.05 )
+stiffnessB = Vector3( 0.5, 0.5, 0.5 )
+dampingA = Vector3( 0, 0, 0 )
 puppeteer_node = NodePath("../Base/Puppeteer_base/Elbow/mid_segment/Knee")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF3"]
@@ -155,27 +156,25 @@ __meta__ = {
 }
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF3"]
-margin_top = 284.0
-margin_right = 559.0
-margin_bottom = 359.0
+margin_left = -1.0
+margin_top = 142.0
+margin_right = 558.0
+margin_bottom = 228.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF3"]
-margin_left = -10.0
-margin_top = 354.0
-margin_right = 547.0
-margin_bottom = 429.0
+margin_left = -1.0
+margin_top = 195.0
+margin_right = 556.0
+margin_bottom = 270.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="B3" type="RigidBody" parent="."]
 transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, -29.4203, -21.5701, 0 )
-mass = 50.0
-physics_material_override = SubResource( 16 )
-gravity_scale = 0.0
 can_sleep = false
 
 [node name="CollisionShape" type="CollisionShape" parent="B3"]

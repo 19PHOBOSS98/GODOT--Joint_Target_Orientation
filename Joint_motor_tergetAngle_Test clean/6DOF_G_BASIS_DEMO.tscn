@@ -1,0 +1,119 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://QuatJoint6DOF_G_by_Basis.gd" type="Script" id=1]
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 10, 1, 10 )
+
+[sub_resource type="SpatialMaterial" id=15]
+albedo_color = Color( 1, 0.121569, 0.0313726, 1 )
+
+[sub_resource type="CubeMesh" id=16]
+material = SubResource( 15 )
+size = Vector3( 20, 2, 20 )
+
+[sub_resource type="CubeMesh" id=18]
+size = Vector3( 20, 2, 20 )
+
+[sub_resource type="SpatialMaterial" id=19]
+flags_transparent = true
+albedo_color = Color( 0, 1, 0.619608, 0.203922 )
+
+[sub_resource type="SpatialMaterial" id=17]
+
+[sub_resource type="CubeMesh" id=12]
+material = SubResource( 17 )
+size = Vector3( 20, 2, 20 )
+
+[sub_resource type="SpatialMaterial" id=14]
+albedo_color = Color( 1, 0.305882, 0, 1 )
+
+[sub_resource type="CylinderMesh" id=13]
+material = SubResource( 14 )
+
+[node name="6DOF_G_BASIS_DEMO" type="Spatial"]
+
+[node name="A2" type="RigidBody" parent="."]
+mode = 1
+mass = 100.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="A2"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="A2/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="Joint" type="MeshInstance" parent="."]
+transform = Transform( -0.462097, -0.56565, -0.683013, 0.612372, 0.353553, -0.707107, 0.641457, -0.74501, 0.183013, 25, 0, 0 )
+skeleton = NodePath("MeshInstance")
+
+[node name="MeshInstance" type="MeshInstance" parent="Joint"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../../6DOF_G_DEMO_BASIS")
+material/0 = SubResource( 19 )
+
+[node name="PIDJoint6DOF2" type="Generic6DOFJoint" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
+nodes/node_a = NodePath("../A2")
+nodes/node_b = NodePath("../B2")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+stiffnessA = Vector3( 0.4, 0.4, 0.4 )
+stiffnessB = Vector3( 0.4, 0.4, 0.4 )
+rest_angle_x = 45.0
+rest_angle_z = 60.0
+puppeteer_node = NodePath("../Joint")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint6DOF2"]
+visible = false
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="PIDJoint6DOF2"]
+visible = false
+margin_left = 2.0
+margin_top = 187.0
+margin_right = 561.0
+margin_bottom = 262.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="PIDJoint6DOF2"]
+visible = false
+margin_left = -1.0
+margin_top = 163.0
+margin_right = 556.0
+margin_bottom = 238.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B2"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -25, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="B2"]
