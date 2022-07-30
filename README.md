@@ -31,6 +31,79 @@ Basis Vector Transform from "Puppeteer" node:
 
 ![001](https://user-images.githubusercontent.com/37253663/152647513-cbbbf4fb-5bf6-48f2-81c6-4685e1ab87fc.png)
 
+
+My (Current) Quaternion Angle Calculation and Safeguards for when the quaternion axis reaches infinity:
+```
+	...
+	var qBT = Quat(body_b.global_transform.basis)	#Quaternion Node B Transform Basis
+	
+	
+	var qTargetO = calc_target_orientation_by_basis()	#Quaternion Target Orientation, using puppeteer_node transform basis
+	#var qTargetO = calc_target_orientation(body_a.global_transform.basis)	#Does the same thing but using manual euler angles instead
+	
+	var rotChange = qTargetO * qBT.inverse()	#rotation change quaternion
+	
+	var angle = 2.0 * acos(rotChange.w)	#Turns to angle radians, the amount it turns around the quats axis
+	
+	
+	#if node B's quat is already facing the same way as qTargetO the axis shoots to infinity
+	#this is my sorry ass attempt to protect us from it:
+	
+	if(is_nan(angle)):
+		angle = 0
+	
+	var axis = Vector3(0,0,0)
+	var v = Vector3(rotChange.x,rotChange.y,rotChange.z)	#rotation change quaternion "V" component
+	
+	var axis_den = sin(angle*0.5)	#quaternion axis denominator
+	if(is_nan(axis_den)):
+		axis = Vector3(0,0,0)
+	elif(axis_den==0):
+		axis = Vector3(0,0,0)
+	else:
+		axis = v / axis_den	#the quaternion's axis
+	
+	var axis_Mag = axis.length()	#axis magnitude
+	if(is_nan(axis_Mag)||is_inf(axis_Mag)):		#here's the axis shooting up to infinity
+		axis = Vector3(0,0,0)			#Might as well set it to zero since the error would be zero at this point
+
+	if(angle>PI):		
+		angle -= 2.0*PI
+
+
+
+	var error = axis*angle
+	...
+```
+
+Here's the function where you can manually set the rest angle:
+```
+func calc_target_orientation(Abasis:Basis):
+
+	var baseBTOActual = Abasis*baseBTOrig#the actual original base node B Transform following node A around in current global space
+
+	var qx = Quat(Abasis.x,rest_angle_x*PI/180.0)
+	var qy = Quat(Abasis.y,rest_angle_y*PI/180.0)
+	var qz = Quat(Abasis.z,rest_angle_z*PI/180.0)
+	
+	#var qBTargRo = qz*qy*qx# Quaternion node B Target Rotation
+	var qBTargRo = qx*qy*qz
+	var BTargetBasis = Basis()
+	BTargetBasis.x =  qBTargRo*baseBTOActual.x
+	BTargetBasis.y =  qBTargRo*baseBTOActual.y
+	BTargetBasis.z =  qBTargRo*baseBTOActual.z
+
+	return Quat(BTargetBasis)
+```
+
+Here's the function where you can use a "Puppeteer" transform basis instead. This is way faster in my opinion. Just orient the Puppeteer and the joint should try to follow it:
+```
+func calc_target_orientation_by_basis():
+	var BTargetBasis = get_node(puppeteer_node).global_transform.basis #can be any node as long as it has it's own basis vector
+	return Quat(BTargetBasis)
+```
+
+
 Thanks to:
 
 DMGregory: https://gamedev.stackexchange.com/questions/182850/rotate-rigidbody-to-face-away-from-camera-with-addtorque/182873#182873
