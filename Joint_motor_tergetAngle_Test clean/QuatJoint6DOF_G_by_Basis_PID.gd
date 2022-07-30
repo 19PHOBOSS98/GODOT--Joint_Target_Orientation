@@ -3,9 +3,10 @@ extends Generic6DOFJoint
 
 
 export(float,0,1) var stiffnessA = 0.0
-export(float,0,1) var stiffnessB = 0.05
+export(float,0,1) var stiffnessB = 0.0
 export(float,0,1) var dampingA = 0.0
-export(float,0,1) var dampingB = 1.0
+export(float,0,1) var dampingB = 0.0
+export var I_bias = 0.0
 
 var body_b
 var body_a
@@ -44,7 +45,7 @@ func _ready():
 	body_b = get_node(get_node_b())
 	set_body_a(body_a)
 	set_body_b(body_b)
-
+	set_total_mass()
 	set_base_transform_original(body_a,body_b)
 	
 
@@ -58,17 +59,51 @@ func _physics_process(delta):
 
 func set_body_a(A):
 	if A == null:
+		hasBase = false
 		return
 	if A.is_class("RigidBody"):
 		body_a = A
-
+		massA= A.mass
+	else:
+		massA = 999999.0
 
 func set_body_b(B):
 	if B == null:
+		hasBase = false
 		return
 	if B.is_class("RigidBody"):
 		body_b = B
+		prints("name: ",self.name," B: ",body_b)
+		massB = B.mass
+	else:
+		massB = 999999.0
 
+func set_total_mass():
+	if(massA == null || massB == null):
+		hasBase = false
+		massTotal = 0.0
+		return
+	massTotal = massA+massB
+
+#######IGNORE THIS#######
+func SIGNAL_set_body_a():
+	if body_a == null:
+		hasBase = false
+		return
+	if body_a.is_class("RigidBody"):
+		massA = body_a.mass
+	else:
+		massA = 999999.0
+
+func SIGNAL_set_body_b():
+	if body_b == null:
+		hasBase = false
+		return
+	if body_b.is_class("RigidBody"):
+		massB = body_b.mass
+	else:
+		massB = 999999.0
+#######IGNORE THIS#######
 
 #base node B Transform Original (baseBTOrig) should be calculated instead of rellying on a 3D Position node on node A
 #In short this has to go
@@ -101,28 +136,39 @@ Thanks to:
 	h4tt3n: https://www.gamedev.net/tutorials/programming/math-and-physics/towards-a-simpler-stiffer-and-more-stable-spring-r3227/
 	For the calculations
 """
+var prev_vel_diff_B = Vector3()
+var prev_vel_diff_A = Vector3()
+
+var derivative_init = false
+
+func reset_derivative_init():
+	derivative_init = false
+
+var integ_stored = Vector3(0,0,0)
+
 func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 	if Engine.editor_hint:
 		return
-	var bAV = Vector3(0.0,0.0,0.0)# Node B Angular Velocity
-	var aAV = Vector3(0.0,0.0,0.0)# Node A Angular Velocity
-	var Ia_inv = Basis(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1))# Node B Inverse Inertia Tensor
-	var Ib_inv = Basis(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1))# Node A Inverse Inertia Tensor
-
+	var bAV = Vector3(0.0,0.0,0.0)# Node B ANgular Velocity
+	var aAV = Vector3(0.0,0.0,0.0)# Node A ANgular Velocity
+	var Ia_inv = Basis(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1))
+	var Ib_inv = Basis(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1))
+	var Ia_inv2
 	if body_b.is_class("RigidBody"):
 		bAV = body_b.angular_velocity
 		Ib_inv = body_b.get_inverse_inertia_tensor()
 
 	if body_a.is_class("RigidBody"):
 		aAV = body_a.angular_velocity
-		Ia_inv = body_a.get_inverse_inertia_tensor()
+		Ia_inv = body_a.get_inverse_inertia_tensor()#somehow, commenting this out works
 
 	var redInertia = add_Basis_by_Element(Ia_inv,Ib_inv).inverse()#reduced moment of inertia: https://www.gamedev.net/tutorials/programming/math-and-physics/towards-a-simpler-stiffer-and-more-stable-spring-r3227/
 	var qBT = Quat(body_b.global_transform.basis)#Quaternion Node B Transform Basis
-	var qTargetO = calc_target_orientation_by_basis()#Quaternion Target Orientation
+	#Quaternion Target Orientation
+	var qTargetO = calc_target_orientation_by_basis()#Does the same thing but without the Position3D node
 	var rotChange = qTargetO * qBT.inverse() #rotation change quaternion
 	
-	var angle = 2.0 * acos(rotChange.w) #Turns to angle radians, the amount it turns around the quaternion axis
+	var angle = 2.0 * acos(rotChange.w) #Turns to angle radians, the amount it turns around the quats axis
 
 	#if node B's quat is already facing the same way as qTargetO the axis shoots to infinity
 	#this is my sorry ass attempt to protect us from it
@@ -149,22 +195,47 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 		return
 
 	var targetAng = axis*angle
+	var deltaSqr = delta*delta
+
+	bAV = body_b.angular_velocity
+	aAV = body_a.angular_velocity
+	
+	var Pb = targetAng/delta
+	var Pa = -Pb
+	
+	var vel_diff_B = bAV-aAV
+	var vel_diff_A = -vel_diff_B
+	
+	var Db = vel_diff_B
+	var Da = -Db
+
+	
+
+	prev_vel_diff_B = bAV-aAV
+	prev_vel_diff_A = -prev_vel_diff_B
+	integ_stored = integ_stored+(targetAng*delta)
+	integ_stored = clamp_vector(integ_stored,-500000,500000)
 	
 	#var tb_consolidated = (redInertia)*(targetAng*stiffnessB/delta - (bAV-aAV)*dampingB)/delta
-	#var ta_consolidated = (redInertia)*(-targetAng*stiffnessA/delta - (aAV-bAV)*dampingA)/delta
+	#var ta_consolidated = (redInertia)*(-targetAng*stiffnessA/delta - (aAV-bAV)*dampingA)
+	
+	var tb_consolidated = (redInertia)*(Pb*stiffnessB - (Db)*dampingB - (integ_stored)*I_bias)
+	#var tb_consolidated = (redInertia)*(Pb*stiffnessB - (Db)*dampingB)/delta
 	#tb_consolidated = clamp_vector(tb_consolidated,-50000000,50000000)
-	#ta_consolidated = clamp_vector(ta_consolidated,-50000000,50000000)
-	#var tib_consolidated = tb_consolidated * delta
-	#var tia_consolidated = ta_consolidated * delta
-	var tib_consolidated = (redInertia)*(targetAng*stiffnessB/delta - (bAV-aAV)*dampingB)#Consolidated Torque Impulse for node B
-	var tia_consolidated = (redInertia)*(-targetAng*stiffnessA/delta - (aAV-bAV)*dampingA)#Consolidated Torque Impulse for node A
+	#tb_consolidated *= delta
 	
 	
-	#if(get_parent().name == "6DOF_G_DEMO1"):
+	#var ta_consolidated = (redInertia)*(Pa*stiffnessA - (Da)*dampingA)
+	var ta_consolidated = -tb_consolidated
+
+
+	
+	if(get_parent().name == "6DOF_G_BASIS_DEMO"):
 		#$RichTextLabel.text= "Ib_inv: \n"+String(body_b.get_inverse_inertia_tensor())
 		#$RichTextLabel2.text= "Ia_inv: \n"+String(body_a.get_inverse_inertia_tensor())
 		#$RichTextLabel.text= "tb+ta: "+String(tb_consolidated+ta_consolidated)
-		#$RichTextLabel.text= "tib: "+String(tib_consolidated)
+		#$RichTextLabel.text= "tb: "+String(tb_consolidated)
+		$RichTextLabel.text= "targetAng: "+String(targetAng)
 		#$RichTextLabel2.text= "bAV: "+String(bAV)
 		#$RichTextLabel2.text= "angle: "+String(angle*180/PI)
 		#$RichTextLabel2.text= "Ib_inv: "+String(redInertia)
@@ -172,14 +243,20 @@ func apply_rot_spring_quat(delta):# apply spring rotation using quaternion
 
 
 	if body_b.is_class("RigidBody") and body_b != null:
-		body_b.apply_torque_impulse(tib_consolidated)
+		body_b.apply_torque_impulse(tb_consolidated)
 		
 
 	if body_a.is_class("RigidBody") and body_a != null:
-		body_a.apply_torque_impulse(tia_consolidated)
+		body_a.apply_torque_impulse(ta_consolidated)
 
 func clamp_vector(vec:Vector3,minimum:float,maximum:float):
 	vec.x = clamp(vec.x,minimum,maximum)
 	vec.y = clamp(vec.y,minimum,maximum)
 	vec.z = clamp(vec.z,minimum,maximum)
+	return vec
+	
+func round_vector(vec:Vector3,dec:float):
+	vec.x = stepify(vec.x,dec)
+	vec.y = stepify(vec.y,dec)
+	vec.z = stepify(vec.z,dec)
 	return vec

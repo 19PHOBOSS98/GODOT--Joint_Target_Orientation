@@ -1,0 +1,144 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Spider_LegG_Shadow_Puppet_By_Joints_SPINDLE.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Chassis_Spindle.gd" type="Script" id=3]
+
+[sub_resource type="BoxShape" id=18]
+extents = Vector3( 10, 2, 70 )
+
+[sub_resource type="SpatialMaterial" id=21]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="CubeMesh" id=19]
+material = SubResource( 21 )
+size = Vector3( 20, 4, 140 )
+
+[sub_resource type="BoxShape" id=22]
+extents = Vector3( 2, 2, 2 )
+
+[sub_resource type="SpatialMaterial" id=23]
+albedo_color = Color( 0, 1, 0.203922, 1 )
+
+[sub_resource type="CubeMesh" id=24]
+material = SubResource( 23 )
+size = Vector3( 4, 4, 4 )
+
+[node name="TankG_ALICE" type="Spatial"]
+
+[node name="Spider_LegG_SPINDLE" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0, 0, 1, 0, 1, 0, -1, 0, 0, -9, 12, 71 )
+
+[node name="Spider_LegG_SPINDLE6" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0, 0, 1, 0, 1, 0, -1, 0, 0, 9, 12, 71 )
+
+[node name="Spider_LegG_SPINDLE2" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 68 )
+
+[node name="Spider_LegG_SPINDLE3" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 60 )
+
+[node name="Spider_LegG_SPINDLE4" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 52 )
+
+[node name="Spider_LegG_SPINDLE5" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 44 )
+
+[node name="Spider_LegG_SPINDLE7" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 36 )
+
+[node name="Spider_LegG_SPINDLE8" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 28 )
+
+[node name="Spider_LegG_SPINDLE9" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -12, 12, 20 )
+
+[node name="Spider_LegG_SPINDLE10" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 68 )
+
+[node name="Spider_LegG_SPINDLE11" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 60 )
+
+[node name="Spider_LegG_SPINDLE12" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 52 )
+
+[node name="Spider_LegG_SPINDLE13" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 44 )
+
+[node name="Spider_LegG_SPINDLE14" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 36 )
+
+[node name="Spider_LegG_SPINDLE15" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 28 )
+
+[node name="Spider_LegG_SPINDLE16" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 12, 12, 20 )
+
+[node name="Spider_LegG_SPINDLE17" parent="." instance=ExtResource( 2 )]
+transform = Transform( 8.74228e-08, 0, -1, 0, 1, 0, 1, 0, 8.74228e-08, 9, 12, -71 )
+
+[node name="Spider_LegG_SPINDLE18" parent="." instance=ExtResource( 2 )]
+transform = Transform( 8.74228e-08, 0, -1, 0, 1, 0, 1, 0, 8.74228e-08, -9, 12, -71 )
+
+[node name="Spider_LegG_SPINDLE19" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -68 )
+
+[node name="Spider_LegG_SPINDLE20" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -60 )
+
+[node name="Spider_LegG_SPINDLE21" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -52 )
+
+[node name="Spider_LegG_SPINDLE22" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -44 )
+
+[node name="Spider_LegG_SPINDLE23" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -36 )
+
+[node name="Spider_LegG_SPINDLE24" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -28 )
+
+[node name="Spider_LegG_SPINDLE25" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 12, 12, -20 )
+
+[node name="Spider_LegG_SPINDLE26" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -68 )
+
+[node name="Spider_LegG_SPINDLE27" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -60 )
+
+[node name="Spider_LegG_SPINDLE28" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -52 )
+
+[node name="Spider_LegG_SPINDLE29" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -44 )
+
+[node name="Spider_LegG_SPINDLE30" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -36 )
+
+[node name="Spider_LegG_SPINDLE31" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -28 )
+
+[node name="Spider_LegG_SPINDLE32" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -12, 12, -20 )
+
+[node name="Chassis" type="Spatial" parent="."]
+script = ExtResource( 3 )
+
+[node name="Platform" type="RigidBody" parent="Chassis"]
+mass = 10000.0
+can_sleep = false
+
+[node name="Thorax" type="CollisionShape" parent="Chassis/Platform"]
+shape = SubResource( 18 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/Thorax"]
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="Head" type="CollisionShape" parent="Chassis/Platform"]
+transform = Transform( 1, 0, 0, 0, 0.688443, -0.72529, 0, 0.72529, 0.688443, 0, -1, 70 )
+shape = SubResource( 22 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Chassis/Platform/Head"]
+mesh = SubResource( 24 )
+material/0 = null

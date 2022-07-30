@@ -1,54 +1,15 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Vira.tscn" type="PackedScene" id=1]
 [ext_resource path="res://texture_03.png" type="Texture" id=2]
-[ext_resource path="res://TankG.tscn" type="PackedScene" id=3]
+[ext_resource path="res://6DOF_G_BASIS_DEMO_IF.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/Recorder/recorder.gd" type="Script" id=5]
-[ext_resource path="res://6DOF_F_DEMO.tscn" type="PackedScene" id=6]
-[ext_resource path="res://6DOF_Euler_DEMO.tscn" type="PackedScene" id=7]
-[ext_resource path="res://6DOF_G_DEMO.tscn" type="PackedScene" id=15]
-[ext_resource path="res://6DOF_G_STICK_DEMO.tscn" type="PackedScene" id=16]
-[ext_resource path="res://6DOF_G_BASIS_DEMO.tscn" type="PackedScene" id=17]
-
-[sub_resource type="BoxShape" id=7]
-extents = Vector3( 4, 4, 4 )
-
-[sub_resource type="SpatialMaterial" id=45]
-albedo_color = Color( 0.545098, 0.0392157, 0.890196, 1 )
-
-[sub_resource type="CubeMesh" id=8]
-material = SubResource( 45 )
-size = Vector3( 8, 8, 8 )
 
 [sub_resource type="BoxShape" id=49]
-extents = Vector3( 4, 4, 20 )
+extents = Vector3( 2, 2, 2 )
 
-[sub_resource type="SpatialMaterial" id=50]
-albedo_color = Color( 0.890196, 0.0392157, 0.0392157, 1 )
-
-[sub_resource type="CubeMesh" id=51]
-material = SubResource( 50 )
-size = Vector3( 8, 8, 40 )
-
-[sub_resource type="BoxShape" id=52]
-extents = Vector3( 4, 5, 40 )
-
-[sub_resource type="SpatialMaterial" id=53]
-albedo_color = Color( 0.890196, 0.423529, 0.0392157, 1 )
-
-[sub_resource type="CubeMesh" id=54]
-material = SubResource( 53 )
-size = Vector3( 8, 10, 80 )
-
-[sub_resource type="BoxShape" id=55]
-extents = Vector3( 4, 10, 10 )
-
-[sub_resource type="SpatialMaterial" id=56]
-albedo_color = Color( 0.145098, 0.890196, 0.0392157, 1 )
-
-[sub_resource type="CubeMesh" id=57]
-material = SubResource( 56 )
-size = Vector3( 8, 20, 20 )
+[sub_resource type="CubeMesh" id=50]
+size = Vector3( 4, 4, 4 )
 
 [sub_resource type="BoxShape" id=2]
 extents = Vector3( 1000, 1, 1000 )
@@ -63,137 +24,24 @@ size = Vector3( 2000, 2, 2000 )
 
 [node name="Spatial" type="Spatial"]
 
-[node name="Vira" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -342.302, -20.946, 119.343 )
-
-[node name="RigidBody7" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -342.302, 116.054, 12.343 )
+[node name="RigidBody" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 51, 66 )
+visible = false
+mode = 1
 mass = 50.0
-can_sleep = false
 
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody7"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody7/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody10" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -383.302, 137.054, 54.343 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody10"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody10/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody8" type="RigidBody" parent="."]
-transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -338.302, 95.054, 12.343 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody8"]
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
 shape = SubResource( 49 )
 
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody8/CollisionShape"]
-mesh = SubResource( 51 )
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody/CollisionShape"]
+mesh = SubResource( 50 )
 material/0 = null
 
-[node name="RigidBody9" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -314.302, 97.054, 14.343 )
-mass = 50.0
-can_sleep = false
+[node name="6DOF_G_BASIS_DEMO_IF" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 46, 67 )
 
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody9"]
-shape = SubResource( 52 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody9/CollisionShape"]
-mesh = SubResource( 54 )
-material/0 = null
-
-[node name="RigidBody11" type="RigidBody" parent="."]
-transform = Transform( 0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -369.302, 129.054, 38.343 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody11"]
-shape = SubResource( 55 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody11/CollisionShape"]
-mesh = SubResource( 57 )
-material/0 = null
-
-[node name="TankG" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -342.302, 76.054, 12.343 )
-
-[node name="6DOF_Euler_DEMO" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.1316, -8.9464, -224.695 )
-
-[node name="6DOF_F_DEMO" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -75.8684, -8.9464, -224.695 )
-
-[node name="6DOF_G_DEMO1" parent="." instance=ExtResource( 15 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -170.35, -8.9464, -224.695 )
-
-[node name="6DOF_G_DEMO2" parent="." instance=ExtResource( 16 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -270.966, -8.9464, -224.695 )
-
-[node name="6DOF_G_BASIS_DEMO" parent="." instance=ExtResource( 17 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -360.966, -8.9464, -224.695 )
-
-[node name="RigidBody6" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -244.593, 63.25, -206.929 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody6"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody6/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody5" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -121.977, 63.25, -227.929 )
-mass = 50.0
-can_sleep = false
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody5"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody5/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody3" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -49.4959, 63.25, -206.929 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody3"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody3/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
-
-[node name="RigidBody4" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 49.5041, 63.25, -206.929 )
-mass = 50.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody4"]
-shape = SubResource( 7 )
-
-[node name="MeshInstance" type="MeshInstance" parent="RigidBody4/CollisionShape"]
-mesh = SubResource( 8 )
-material/0 = null
+[node name="Vira" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 48, 133 )
 
 [node name="Floor" type="StaticBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -27, 236 )

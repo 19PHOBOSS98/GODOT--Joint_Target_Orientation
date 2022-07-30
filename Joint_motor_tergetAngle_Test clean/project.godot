@@ -28,6 +28,10 @@ config/icon="res://icon.png"
 
 enabled=PoolStringArray( "res://addons/Recorder/plugin.cfg" )
 
+[global]
+
+gravity=false
+
 [input]
 
 ui_left={

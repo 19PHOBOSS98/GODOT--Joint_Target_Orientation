@@ -1,28 +1,41 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=18 format=2]
 
-[ext_resource path="res://QuatJoint6DOF_G_Orientation_By_Basis.gd" type="Script" id=1]
+[ext_resource path="res://QuatJoint6DOF_G_by_Basis_Angular_V.gd" type="Script" id=1]
 [ext_resource path="res://Elbow.gd" type="Script" id=2]
 [ext_resource path="res://Knee.gd" type="Script" id=3]
 
-[sub_resource type="BoxShape" id=11]
-extents = Vector3( 10, 1, 1 )
-
-[sub_resource type="CubeMesh" id=12]
-size = Vector3( 20, 2, 2 )
-
 [sub_resource type="CylinderMesh" id=13]
+
+[sub_resource type="BoxShape" id=24]
+extents = Vector3( 5, 1, 1 )
+
+[sub_resource type="CubeMesh" id=25]
+size = Vector3( 10, 2, 2 )
+
+[sub_resource type="CubeMesh" id=26]
+size = Vector3( 10, 2, 2 )
 
 [sub_resource type="SpatialMaterial" id=22]
 flags_transparent = true
-albedo_color = Color( 0, 1, 0, 0.266667 )
+albedo_color = Color( 0, 1, 1, 0.12549 )
 
 [sub_resource type="CubeMesh" id=20]
 material = SubResource( 22 )
-size = Vector3( 20, 2, 2 )
+size = Vector3( 22, 2, 2 )
 
 [sub_resource type="CubeMesh" id=21]
 material = SubResource( 22 )
 size = Vector3( 60, 2, 2 )
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 11, 1, 1 )
+
+[sub_resource type="SpatialMaterial" id=27]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="CubeMesh" id=28]
+material = SubResource( 27 )
+size = Vector3( 22, 2, 2 )
 
 [sub_resource type="PhysicsMaterial" id=23]
 rough = true
@@ -30,63 +43,111 @@ rough = true
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 30, 1, 1 )
 
+[sub_resource type="SpatialMaterial" id=29]
+albedo_color = Color( 0, 0.439216, 1, 1 )
+
 [sub_resource type="CubeMesh" id=15]
+material = SubResource( 29 )
 size = Vector3( 60, 2, 2 )
 
-[node name="Spider_LegG_Shadow_Puppet_By_Joints" type="Spatial" groups=["LEG"]]
+[node name="Spider_LegG_SPINDLE" type="Spatial" groups=["LEG"]]
 
 [node name="Base" type="RigidBody" parent="."]
 transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, -15.5, 0 )
-mass = 5000.0
+mass = 100.0
 can_sleep = false
 
-[node name="CollisionShape" type="CollisionShape" parent="Base"]
-shape = SubResource( 11 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Base/CollisionShape"]
-mesh = SubResource( 12 )
-material/0 = null
-
 [node name="MeshInstance" type="MeshInstance" parent="Base"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 5.68434e-14, 0 )
+visible = false
 mesh = SubResource( 13 )
 skeleton = NodePath("")
 material/0 = null
 
+[node name="CollisionShape" type="CollisionShape" parent="Base"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -1.74846e-07, 0 )
+shape = SubResource( 24 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Base/CollisionShape"]
+mesh = SubResource( 25 )
+material/0 = null
+
 [node name="Puppeteer_base" type="MeshInstance" parent="Base"]
-mesh = SubResource( 12 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -1.74846e-07, 0 )
+mesh = SubResource( 26 )
 skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="Elbow" type="Position3D" parent="Base/Puppeteer_base"]
-transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 15, 6.5567e-07, 0 )
+transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, 8, 3.49691e-07, 0 )
 script = ExtResource( 2 )
 
 [node name="mid_segment" type="MeshInstance" parent="Base/Puppeteer_base/Elbow"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0 )
 mesh = SubResource( 20 )
 skeleton = NodePath("../../../..")
 material/0 = null
 
 [node name="Knee" type="Position3D" parent="Base/Puppeteer_base/Elbow/mid_segment"]
-transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 15, -1.14441e-05, 0 )
+transform = Transform( 0.258819, -0.965926, 0, 0.965926, 0.258819, 0, 0, 0, 1, 14, -3.24249e-05, 0 )
 script = ExtResource( 3 )
 
 [node name="end_segment" type="MeshInstance" parent="Base/Puppeteer_base/Elbow/mid_segment/Knee"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 7.62939e-06, 0 )
 mesh = SubResource( 21 )
 skeleton = NodePath("../../../../../..")
 material/0 = null
 
+[node name="B2" type="RigidBody" parent="."]
+transform = Transform( -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -16, -19.5, 0 )
+mass = 100.0
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0 )
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
+mesh = SubResource( 28 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -12, 3.8147e-06, 0 )
+visible = false
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="B3" type="RigidBody" parent="."]
+transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -28, -36.5, 0 )
+mass = 100.0
+physics_material_override = SubResource( 23 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="B3"]
+shape = SubResource( 14 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B3/CollisionShape"]
+mesh = SubResource( 15 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B3"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
 [node name="QuatJoint6DOF2" type="Generic6DOFJoint" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30.5, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2423e-13, -18.5, 0 )
 nodes/node_a = NodePath("../Base")
 nodes/node_b = NodePath("../B2")
 angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
+stiffnessB = 1.0
 puppeteer_node = NodePath("../Base/Puppeteer_base/Elbow")
+torque_lim = 50000000000
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF2"]
 margin_left = -1.0
@@ -115,37 +176,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="B2" type="RigidBody" parent="."]
-transform = Transform( -0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, -10.6066, -19.8934, 0 )
-mass = 5000.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="B2"]
-shape = SubResource( 11 )
-
-[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
-mesh = SubResource( 12 )
-material/0 = null
-
-[node name="MeshInstance" type="MeshInstance" parent="B2"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
-mesh = SubResource( 13 )
-skeleton = NodePath("")
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="B2"]
-
 [node name="QuatJoint6DOF3" type="Generic6DOFJoint" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21.92, -8.58, 0 )
+transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -28, -19.5, 0 )
 nodes/node_a = NodePath("../B2")
 nodes/node_b = NodePath("../B3")
 angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
 script = ExtResource( 1 )
+stiffnessB = 1.0
 puppeteer_node = NodePath("../Base/Puppeteer_base/Elbow/mid_segment/Knee")
+torque_lim = 50000000000
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF3"]
+visible = false
 margin_left = -1.0
 margin_top = 106.0
 margin_right = 523.0
@@ -155,6 +199,7 @@ __meta__ = {
 }
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF3"]
+visible = false
 margin_left = -1.0
 margin_top = 142.0
 margin_right = 558.0
@@ -164,6 +209,7 @@ __meta__ = {
 }
 
 [node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF3"]
+visible = false
 margin_left = -1.0
 margin_top = 195.0
 margin_right = 556.0
@@ -171,22 +217,3 @@ margin_bottom = 270.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="B3" type="RigidBody" parent="."]
-transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, -29.4203, -21.5701, 0 )
-mass = 5000.0
-physics_material_override = SubResource( 23 )
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="B3"]
-shape = SubResource( 14 )
-
-[node name="MeshInstance" type="MeshInstance" parent="B3/CollisionShape"]
-mesh = SubResource( 15 )
-material/0 = null
-
-[node name="MeshInstance" type="MeshInstance" parent="B3"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 0, 0 )
-mesh = SubResource( 13 )
-skeleton = NodePath("")
-material/0 = null

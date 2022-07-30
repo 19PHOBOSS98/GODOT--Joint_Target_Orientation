@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://QuatJoint6DOF_G_by_Basis_Angular_V.gd" type="Script" id=1]
 [ext_resource path="res://Joint.gd" type="Script" id=2]
+[ext_resource path="res://IF_B.gd" type="Script" id=3]
 
 [sub_resource type="BoxShape" id=11]
 extents = Vector3( 10, 1, 10 )
@@ -32,7 +33,7 @@ albedo_color = Color( 1, 0.305882, 0, 1 )
 [sub_resource type="CylinderMesh" id=13]
 material = SubResource( 14 )
 
-[node name="6DOF_G_BASIS_DEMO" type="Spatial"]
+[node name="6DOF_G_BASIS_DEMO_IF" type="Spatial"]
 
 [node name="A2" type="RigidBody" parent="."]
 mode = 1
@@ -47,7 +48,7 @@ mesh = SubResource( 16 )
 material/0 = null
 
 [node name="Joint" type="MeshInstance" parent="A2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
+transform = Transform( -3.09086e-08, 3.09086e-08, -1, 0.707107, 0.707107, 0, 0.707107, -0.707107, -4.37114e-08, 25, 0, 0 )
 skeleton = NodePath("MeshInstance")
 script = ExtResource( 2 )
 
@@ -57,6 +58,30 @@ mesh = SubResource( 18 )
 skeleton = NodePath("../../6DOF_G_DEMO_BASIS")
 material/0 = SubResource( 19 )
 
+[node name="B2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
+mass = 10.0
+gravity_scale = 0.0
+custom_integrator = true
+can_sleep = false
+script = ExtResource( 3 )
+torque_lim = 500000.0
+
+[node name="CollisionShape" type="CollisionShape" parent="B2"]
+shape = SubResource( 11 )
+
+[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
+mesh = SubResource( 12 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="B2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -25, 0, 0 )
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="Position3D" type="Position3D" parent="B2"]
+
 [node name="PIDJoint6DOF2" type="Generic6DOFJoint" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0 )
 nodes/node_a = NodePath("../A2")
@@ -64,10 +89,12 @@ nodes/node_b = NodePath("../B2")
 angular_limit_x/enabled = false
 angular_limit_y/enabled = false
 angular_limit_z/enabled = false
+angular_spring_z/stiffness = 100000.0
+angular_spring_z/damping = 1000.0
 script = ExtResource( 1 )
-stiffnessB = 0.108
+stiffnessB = 1.0
 puppeteer_node = NodePath("../A2/Joint")
-torque_lim = 5000000
+torque_lim = 0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="PIDJoint6DOF2"]
 margin_left = -1.0
@@ -95,23 +122,3 @@ margin_bottom = 238.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="B2" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0 )
-mass = 511.0
-can_sleep = false
-
-[node name="CollisionShape" type="CollisionShape" parent="B2"]
-shape = SubResource( 11 )
-
-[node name="MeshInstance" type="MeshInstance" parent="B2/CollisionShape"]
-mesh = SubResource( 12 )
-material/0 = null
-
-[node name="MeshInstance" type="MeshInstance" parent="B2"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -25, 0, 0 )
-mesh = SubResource( 13 )
-skeleton = NodePath("")
-material/0 = null
-
-[node name="Position3D" type="Position3D" parent="B2"]

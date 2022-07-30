@@ -1,0 +1,332 @@
+[gd_scene load_steps=23 format=2]
+
+[ext_resource path="res://QuatJoint6DOF_G_Orientation_By_Basis.gd" type="Script" id=1]
+[ext_resource path="res://Elbow.gd" type="Script" id=2]
+[ext_resource path="res://Knee.gd" type="Script" id=3]
+
+[sub_resource type="CylinderMesh" id=13]
+
+[sub_resource type="BoxShape" id=24]
+
+[sub_resource type="CubeMesh" id=25]
+
+[sub_resource type="SpatialMaterial" id=22]
+flags_transparent = true
+albedo_color = Color( 0, 1, 1, 0.772549 )
+
+[sub_resource type="CubeMesh" id=26]
+material = SubResource( 22 )
+
+[sub_resource type="CubeMesh" id=20]
+material = SubResource( 22 )
+size = Vector3( 25, 2, 2 )
+
+[sub_resource type="CubeMesh" id=21]
+material = SubResource( 22 )
+size = Vector3( 60, 2, 2 )
+
+[sub_resource type="CubeMesh" id=30]
+material = SubResource( 22 )
+size = Vector3( 25, 2, 2 )
+
+[sub_resource type="CubeMesh" id=31]
+material = SubResource( 22 )
+size = Vector3( 20, 2, 10 )
+
+[sub_resource type="PhysicsMaterial" id=23]
+rough = true
+
+[sub_resource type="BoxShape" id=14]
+extents = Vector3( 10, 1, 1 )
+
+[sub_resource type="SpatialMaterial" id=29]
+albedo_color = Color( 0, 0.439216, 1, 1 )
+
+[sub_resource type="CubeMesh" id=15]
+material = SubResource( 29 )
+size = Vector3( 25, 2, 2 )
+
+[sub_resource type="BoxShape" id=36]
+extents = Vector3( 30, 1, 1 )
+
+[sub_resource type="CubeMesh" id=32]
+size = Vector3( 60, 2, 2 )
+
+[sub_resource type="BoxShape" id=37]
+extents = Vector3( 12, 1, 1 )
+
+[sub_resource type="CubeMesh" id=33]
+size = Vector3( 25, 2, 2 )
+
+[sub_resource type="BoxShape" id=34]
+extents = Vector3( 10, 1, 5 )
+
+[sub_resource type="CubeMesh" id=35]
+size = Vector3( 20, 2, 10 )
+
+[node name="Spider_LegG_REX" type="Spatial" groups=["LEG"]]
+
+[node name="Base" type="RigidBody" parent="."]
+mass = 5000.0
+can_sleep = false
+
+[node name="MeshInstance" type="MeshInstance" parent="Base"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -15, 5.68434e-14, 0 )
+visible = false
+mesh = SubResource( 13 )
+skeleton = NodePath("")
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="Base"]
+shape = SubResource( 24 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Base/CollisionShape"]
+mesh = SubResource( 25 )
+material/0 = null
+
+[node name="Puppeteer_base" type="MeshInstance" parent="Base"]
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="Hip" type="Position3D" parent="Base/Puppeteer_base"]
+transform = Transform( -0.707106, 0.707106, 0, -0.707106, -0.707106, 0, 0, 0, 1, 1.35525e-20, -1.98952e-13, 0 )
+script = ExtResource( 2 )
+
+[node name="upper_leg" type="MeshInstance" parent="Base/Puppeteer_base/Hip"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../../../..")
+material/0 = null
+
+[node name="Knee" type="Position3D" parent="Base/Puppeteer_base/Hip/upper_leg"]
+transform = Transform( -0.258819, -0.965926, 0, 0.965926, -0.258819, 0, 0, 0, 1, 18, -3.24249e-05, 0 )
+script = ExtResource( 3 )
+
+[node name="lower_leg" type="MeshInstance" parent="Base/Puppeteer_base/Hip/upper_leg/Knee"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33, -3.63798e-12, 0 )
+mesh = SubResource( 21 )
+skeleton = NodePath("../../../../../..")
+material/0 = null
+
+[node name="Ankle" type="Position3D" parent="Base/Puppeteer_base/Hip/upper_leg/Knee"]
+transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, 65, -3.8147e-06, 0 )
+script = ExtResource( 3 )
+
+[node name="upper_foot" type="MeshInstance" parent="Base/Puppeteer_base/Hip/upper_leg/Knee/Ankle"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 0 )
+mesh = SubResource( 30 )
+skeleton = NodePath("../../../../../../..")
+material/0 = null
+
+[node name="Toe" type="Position3D" parent="Base/Puppeteer_base/Hip/upper_leg/Knee/Ankle/upper_foot"]
+transform = Transform( 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0, 1, 15, 0, 0 )
+script = ExtResource( 3 )
+
+[node name="lower_foot" type="MeshInstance" parent="Base/Puppeteer_base/Hip/upper_leg/Knee/Ankle/upper_foot/Toe"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 0 )
+mesh = SubResource( 31 )
+skeleton = NodePath("../../../../../../../../..")
+material/0 = null
+
+[node name="QuatJoint6DOF2" type="Generic6DOFJoint" parent="."]
+transform = Transform( -0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0, 1, 1.35525e-20, -1.98952e-13, 0 )
+nodes/node_a = NodePath("../Base")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+puppeteer_node = NodePath("../Base/Puppeteer_base/Hip")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = -1.0
+margin_top = 142.0
+margin_right = 558.0
+margin_bottom = 228.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF2"]
+margin_left = -1.0
+margin_top = 195.0
+margin_right = 556.0
+margin_bottom = 270.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuatJoint6DOF3" type="Generic6DOFJoint" parent="."]
+transform = Transform( 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0, 1, -22.6274, -22.6274, 0 )
+nodes/node_b = NodePath("../upper_leg")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+puppeteer_node = NodePath("../Base/Puppeteer_base/Hip/upper_leg/Knee")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF3"]
+visible = false
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF3"]
+visible = false
+margin_left = -1.0
+margin_top = 142.0
+margin_right = 558.0
+margin_bottom = 228.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF3"]
+margin_left = -1.0
+margin_top = 195.0
+margin_right = 556.0
+margin_bottom = 270.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuatJoint6DOF4" type="Generic6DOFJoint" parent="."]
+transform = Transform( -0.866025, 0.5, 0, -0.5, -0.866025, 0, 0, 0, 1, 33.6642, -55.1274, 0 )
+nodes/node_b = NodePath("../upper_leg")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+puppeteer_node = NodePath("../Base/Puppeteer_base/Hip/upper_leg/Knee/Ankle")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF4"]
+visible = false
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF4"]
+visible = false
+margin_left = -1.0
+margin_top = 142.0
+margin_right = 558.0
+margin_bottom = 228.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF4"]
+margin_left = -1.0
+margin_top = 195.0
+margin_right = 556.0
+margin_bottom = 270.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuatJoint6DOF5" type="Generic6DOFJoint" parent="."]
+transform = Transform( -1, -5.96047e-08, 0, 5.96047e-08, -1, 0, 0, 0, 1, 7.68345, -70.1273, 0 )
+nodes/node_b = NodePath("../upper_leg")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = ExtResource( 1 )
+puppeteer_node = NodePath("../Base/Puppeteer_base/Hip/upper_leg/Knee/Ankle/upper_foot/Toe")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="QuatJoint6DOF5"]
+visible = false
+margin_left = -1.0
+margin_top = 106.0
+margin_right = 523.0
+margin_bottom = 181.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="QuatJoint6DOF5"]
+visible = false
+margin_left = -1.0
+margin_top = 142.0
+margin_right = 558.0
+margin_bottom = 228.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="QuatJoint6DOF5"]
+margin_left = -1.0
+margin_top = 195.0
+margin_right = 556.0
+margin_bottom = 270.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="upper_leg" type="RigidBody" parent="."]
+transform = Transform( -0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0, 1, -9.89949, -9.89949, 0 )
+mass = 5000.0
+physics_material_override = SubResource( 23 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="upper_leg"]
+shape = SubResource( 14 )
+
+[node name="MeshInstance" type="MeshInstance" parent="upper_leg/CollisionShape"]
+mesh = SubResource( 15 )
+material/0 = null
+
+[node name="lower_leg" type="RigidBody" parent="."]
+transform = Transform( 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0, 1, 5.95139, -39.1274, 0 )
+mass = 5000.0
+physics_material_override = SubResource( 23 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="lower_leg"]
+shape = SubResource( 36 )
+
+[node name="MeshInstance" type="MeshInstance" parent="lower_leg/CollisionShape"]
+mesh = SubResource( 32 )
+material/0 = null
+
+[node name="upper_foot" type="RigidBody" parent="."]
+transform = Transform( -0.866025, 0.5, 0, -0.5, -0.866025, 0, 0, 0, 1, 20.6738, -62.6274, 0 )
+mass = 5000.0
+physics_material_override = SubResource( 23 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="upper_foot"]
+shape = SubResource( 37 )
+
+[node name="MeshInstance" type="MeshInstance" parent="upper_foot/CollisionShape"]
+mesh = SubResource( 33 )
+material/0 = null
+
+[node name="lower_foot" type="RigidBody" parent="."]
+transform = Transform( -1, -5.96047e-08, 0, 5.96047e-08, -1, 0, 0, 0, 1, -5.31654, -70.1273, 0 )
+mass = 5000.0
+physics_material_override = SubResource( 23 )
+can_sleep = false
+
+[node name="CollisionShape" type="CollisionShape" parent="lower_foot"]
+shape = SubResource( 34 )
+
+[node name="MeshInstance" type="MeshInstance" parent="lower_foot/CollisionShape"]
+mesh = SubResource( 35 )
+material/0 = null
